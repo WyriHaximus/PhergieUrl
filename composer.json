@@ -1,0 +1,26 @@
+{
+    "name": "wyrihaximus/phergie-url",
+    "description": "Phergie plugin for Display URL information about links",
+    "keywords": [ "irc", "bot", "react", "plugin" ],
+    "license": "MIT",
+    "support": {
+        "irc": "irc://irc.freenode.net/phergie",
+        "issues": "https://github.com/WyriHaximus/PhergieUrl/issues",
+        "source": "https://github.com/WyriHaximus/PhergieUrl"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "phergie/phergie-irc-bot-react": "dev-master",
+        "nojimage/twitter-text-php": "1.1.1",
+        "wyrihaximus/react-guzzle": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*",
+        "phake/phake": "1.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "WyriHaximus\\Phergie\\Plugin\\Url\\": "src"
+        }
+    }
+}
