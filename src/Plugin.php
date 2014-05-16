@@ -69,21 +69,25 @@ class Plugin extends AbstractPlugin
             return;
         }
 
-        echo $url;
-        if ($this->emitUrlEvents($url, $event, $queue)) {
+        $requestId = uniqid();
+        $this->logger->debug('[' . $requestId . ']Found url: ' . $url);
+
+        if ($this->emitUrlEvents($requestId, $url, $event, $queue)) {
+            $this->logger->debug('[' . $requestId . ']Emitting: http.request');
+            $logger = $this->logger;
             $this->emitter->emit('http.request', array(new \WyriHaximus\Phergie\Plugin\Http\Request(array(
                 'url' => $url,
-                'responseCallback' => function($headers, $code) {
-                    var_export([$headers, $code]);
+                'responseCallback' => function($headers, $code) use($requestId, $logger) {
+                    $logger->debug('[' . $requestId . ']Reponse: ' . $code);
                 },
-                'resolveCallback' => function($data, $headers, $code) {
-                    var_export([$data, $headers, $code]);
+                'resolveCallback' => function($data, $headers, $code) use($requestId, $logger) {
+                    $logger->debug('[' . $requestId . ']Download complete: ' . strlen($data) . ' in length length');
                 },
             ))));
         }
     }
 
-    protected function emitUrlEvents($url, UserEvent $event, EventQueue $queue) {
+    protected function emitUrlEvents($requestId, $url, UserEvent $event, EventQueue $queue) {
         $parsedUrl = parse_url($url);
 
         if (count($parsedUrl) == 1 && isset($parsedUrl['path'])) {
@@ -96,8 +100,10 @@ class Plugin extends AbstractPlugin
             $host = substr($host, 4);
         }
 
-        if (count($this->emitter->listeners('url.host.' . $host)) > 0) {
-            $this->emitter->emit('url.host.' . $host, array($url, $event, $queue));
+        $eventName = 'url.host.' . $host;
+        if (count($this->emitter->listeners($eventName)) > 0) {
+            $this->logger->debug('[' . $requestId . ']Emitting: ' . $eventName);
+            $this->emitter->emit($eventName, array($url, $event, $queue));
             return false;
         } else {
             return true;
