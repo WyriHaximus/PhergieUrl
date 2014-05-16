@@ -11,11 +11,8 @@
 namespace WyriHaximus\Phergie\Plugin\Url;
 
 use Phergie\Irc\Bot\React\AbstractPlugin;
-use Phergie\Irc\Bot\React\EventQueueInterface;
-use Phergie\Irc\Event\EventInterface;
-use React\Promise\Deferred;
-use \Phergie\Irc\Event\UserEvent;
-use \Phergie\Irc\Bot\React\EventQueue;
+use Phergie\Irc\Event\UserEvent;
+use Phergie\Irc\Bot\React\EventQueue;
 
 /**
  * Plugin for Display URL information about links.
