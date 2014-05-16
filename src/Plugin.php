@@ -94,6 +94,9 @@ class Plugin extends AbstractPlugin
                 },
             ))));
         }
+
+        $this->logDebug('[' . $requestId . ']Emitting: url.host.all');
+        $this->emitter->emit('url.host.all', array($url, $event, $queue));
     }
 
     protected function emitUrlEvents($requestId, $url, UserEvent $event, EventQueue $queue) {
