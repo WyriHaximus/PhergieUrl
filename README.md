@@ -33,8 +33,8 @@ new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
 
 This plugin emails the following events
 
-[*] `url.host.HOSTNAME` For example `url.host.twitter.com` (`www.` is stripped from the hostname).
-[*] `url.host.all` For all hostnames.
+* `url.host.HOSTNAME` For example `url.host.twitter.com` (`www.` is stripped from the hostname).
+* `url.host.all` For all hostnames.
 
 ## Tests
 
