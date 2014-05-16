@@ -51,6 +51,10 @@ class Plugin extends AbstractPlugin
         );
     }
 
+    public function logDebug($message) {
+        $this->logger->debug('[Url]' . $message);
+    }
+
     public function handleIrcReceived(UserEvent $event, EventQueue $queue)
     {
         $params = $event->getParams();
@@ -70,23 +74,23 @@ class Plugin extends AbstractPlugin
         }
 
         $requestId = uniqid();
-        $this->logger->debug('[' . $requestId . ']Found url: ' . $url);
+        $this->logDebug('[' . $requestId . ']Found url: ' . $url);
 
         if (count($parsedUrl) == 1 && isset($parsedUrl['path'])) {
             $url = 'http://' . $parsedUrl['path'] . '/';
-            $this->logger->debug('[' . $requestId . ']Corrected url: ' . $url);
+            $this->logDebug('[' . $requestId . ']Corrected url: ' . $url);
         }
 
         if ($this->emitUrlEvents($requestId, $url, $event, $queue)) {
-            $this->logger->debug('[' . $requestId . ']Emitting: http.request');
-            $logger = $this->logger;
+            $this->logDebug('[' . $requestId . ']Emitting: http.request');
+            $that = $this;
             $this->emitter->emit('http.request', array(new \WyriHaximus\Phergie\Plugin\Http\Request(array(
                 'url' => $url,
-                'responseCallback' => function($headers, $code) use($requestId, $logger) {
-                    $logger->debug('[' . $requestId . ']Reponse: ' . $code);
+                'responseCallback' => function($headers, $code) use($requestId, $that) {
+                    $that->logDebug('[' . $requestId . ']Reponse: ' . $code);
                 },
-                'resolveCallback' => function($data, $headers, $code) use($requestId, $logger) {
-                    $logger->debug('[' . $requestId . ']Download complete: ' . strlen($data) . ' in length length');
+                'resolveCallback' => function($data, $headers, $code) use($requestId, $that) {
+                    $that->logDebug('[' . $requestId . ']Download complete: ' . strlen($data) . ' in length length');
                 },
             ))));
         }
@@ -107,7 +111,7 @@ class Plugin extends AbstractPlugin
 
         $eventName = 'url.host.' . $host;
         if (count($this->emitter->listeners($eventName)) > 0) {
-            $this->logger->debug('[' . $requestId . ']Emitting: ' . $eventName);
+            $this->logDebug('[' . $requestId . ']Emitting: ' . $eventName);
             $this->emitter->emit($eventName, array($url, $event, $queue));
             return false;
         } else {
