@@ -29,6 +29,13 @@ new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
 ))
 ```
 
+## Events
+
+This plugin emails the following events
+
+* `url.host.HOSTNAME` For example `url.host.twitter.com` (`www.` is stripped from the hostname).
+* `url.host.all` For all hostnames.
+
 ## Tests
 
 To run the unit test suite:
