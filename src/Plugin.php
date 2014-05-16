@@ -72,6 +72,11 @@ class Plugin extends AbstractPlugin
         $requestId = uniqid();
         $this->logger->debug('[' . $requestId . ']Found url: ' . $url);
 
+        if (count($parsedUrl) == 1 && isset($parsedUrl['path'])) {
+            $url = 'http://' . $parsedUrl['path'] . '/';
+            $this->logger->debug('[' . $requestId . ']Corrected url: ' . $url);
+        }
+
         if ($this->emitUrlEvents($requestId, $url, $event, $queue)) {
             $this->logger->debug('[' . $requestId . ']Emitting: http.request');
             $logger = $this->logger;
