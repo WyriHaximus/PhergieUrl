@@ -22,11 +22,22 @@ See Phergie documentation for more information on
 ## Configuration
 
 ```php
-new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
+return array(
+
+    'plugins' => array(
+
+        // dependencies
+        new \WyriHaximus\Phergie\Plugin\Dns\Plugin,
+        new \WyriHaximus\Phergie\Plugin\Http\Plugin,
+
+        new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
 
 
 
-))
+        )),
+
+    )
+);
 ```
 
 ## Events
