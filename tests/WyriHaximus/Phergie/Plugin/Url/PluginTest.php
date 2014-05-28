@@ -30,6 +30,10 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     public function testGetSubscribedEvents()
     {
         $plugin = new Plugin;
-        $this->assertInternalType('array', $plugin->getSubscribedEvents());
+        $subscribedEvents = $plugin->getSubscribedEvents();
+        $this->assertInternalType('array', $subscribedEvents);
+        $this->assertSame(array(
+            'irc.received.privmsg' => 'handleIrcReceived',
+        ), $subscribedEvents);
     }
 }
