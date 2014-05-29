@@ -36,4 +36,19 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             'irc.received.privmsg' => 'handleIrcReceived',
         ), $subscribedEvents);
     }
+
+    public function testLogDebug() {
+        $logger = $this->getMock('Monolog\Logger', array(
+        'debug',
+        ), array(
+        'test',
+        ));
+        $logger->expects($this->once())
+        ->method('debug')
+        ->with('[Url]foo:bar');
+
+        $plugin = new Plugin();
+        $plugin->setLogger($logger);
+        $plugin->logDebug('foo:bar');
+    }
 }
