@@ -15,10 +15,13 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     private $url = 'http://example.com/';
     private $body = '<html><title>foo</title></html></html>';
     private $inputHeaders = array(
-        'Content-Type' => 'text/html',
+        'Content-Type' => 'text/html;charset=utf-8',
     );
     private $expectedHeaders = array(
-        'content-type' => 'text/html',
+        'content-type' => array(
+            'text/html',
+            'charset=utf-8',
+        ),
     );
     private $code = 200;
 

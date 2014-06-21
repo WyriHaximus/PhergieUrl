@@ -84,9 +84,11 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                 array(
                     '%url%' => 'http://example.com/',
                     '%http-status-code%' => 200,
-                    '%header-age%' => 13,
+                    '%title%' => '',
+                    '%composed-title%' => '',
+                    '%header-age%' => '13',
                     '%header-content-type%' => 'text/html',
-                    '%header-content-length%' => 128,
+                    '%header-content-length%' => '128',
                     '%header-content-language%' => 'nl',
                     '%header-date%' => 'The Darkages',
                     '%header-etag%' => '',
@@ -94,8 +96,6 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                     '%header-last-modified%' => '',
                     '%header-server%' => '',
                     '%header-x-powered-by%' => '',
-                    '%title%' => '',
-                    '%composed-title%' => '',
                 ),
             ),
             array(
@@ -109,6 +109,8 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                 array(
                     '%url%' => 'https://example.com/',
                     '%http-status-code%' => 201,
+                    '%title%' => '',
+                    '%composed-title%' => '',
                     '%header-age%' => '',
                     '%header-content-type%' => '',
                     '%header-content-length%' => '',
@@ -119,8 +121,6 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                     '%header-last-modified%' => 'now',
                     '%header-server%' => 'nginx',
                     '%header-x-powered-by%' => 'ColdFusion',
-                    '%title%' => '',
-                    '%composed-title%' => '',
                 ),
             ),
         );

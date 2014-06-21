@@ -34,7 +34,7 @@ class Url implements UrlInterface
         $this->code = $code;
 
         foreach ($headers as $key => $value) {
-            $this->headers[strtolower($key)] = $value;
+            $this->headers[strtolower($key)] = explode(';', $value);
         }
     }
 
