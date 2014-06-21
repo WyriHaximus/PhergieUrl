@@ -95,14 +95,17 @@ class Plugin extends AbstractPlugin
         if ($this->emitUrlEvents($requestId, $url, $event, $queue)) {
             $this->logDebug('[' . $requestId . ']Emitting: http.request');
             $that = $this;
+            $start = microtime(true);
             $this->emitter->emit('http.request', array(new Request(array(
                 'url' => $url,
-                'responseCallback' => function($headers, $code) use($requestId, $that) {
-                    $that->logDebug('[' . $requestId . ']Reponse: ' . $code);
+                'responseCallback' => function($headers, $code) use($requestId, $that, $start) {
+                    $end = microtime(true);
+                    $that->logDebug('[' . $requestId . ']Reponse (after ' . ($end - $start) . 's): ' . $code);
                 },
-                'resolveCallback' => function($data, $headers, $code) use($requestId, $that, $url, $event, $queue) {
-                    $that->logDebug('[' . $requestId . ']Download complete: ' . strlen($data) . ' in length length');
-                    $message = $that->getHandler()->handle(new Url($url, $data, $headers, $code));
+                'resolveCallback' => function($data, $headers, $code) use($requestId, $that, $url, $event, $queue, $start) {
+                    $end = microtime(true);
+                    $that->logDebug('[' . $requestId . ']Download complete (after ' . ($end - $start) . 's): ' . strlen($data) . ' in length length');
+                    $message = $that->getHandler()->handle(new Url($url, $data, $headers, $code, $end - $start));
                     foreach ($event->getTargets() as $target) {
                         $queue->ircPrivmsg($target, $message);
                     }

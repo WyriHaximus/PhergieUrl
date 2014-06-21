@@ -43,12 +43,14 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         ),
     );
     private $code = 200;
+    private $timing = 3.14159265359;
 
     public function testUrl() {
-        $url = new Url($this->url, $this->body, $this->inputHeaders, $this->code);
+        $url = new Url($this->url, $this->body, $this->inputHeaders, $this->code, $this->timing);
         $this->assertSame($this->url, $url->getUrl());
         $this->assertSame($this->body, $url->getBody());
         $this->assertSame($this->expectedHeaders, $url->getHeaders());
         $this->assertSame($this->code, $url->getCode());
+        $this->assertSame($this->timing, $url->getTiming());
     }
 }

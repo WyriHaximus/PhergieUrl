@@ -49,14 +49,14 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                 null,
                 new Url('http://example.com/', '<html><title>foo</title></html></html>', array(
                     'Content-Type' => 'text/html',
-                ), 200),
+                ), 200, 3.14159265359),
                 '[ http://example.com/ ] foo',
             ),
             array(
                 null,
                 new Url('http://example.com/', '', array(
                     'Content-Type' => 'odd/non-existing',
-                ), 200),
+                ), 200, 3.14159265359),
                 '[ http://example.com/ ] ',
             ),
         );
@@ -80,10 +80,12 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                     'Content-Length' => 128,
                     'Content-Language' => 'nl',
                     'Date' => 'The Darkages',
-                ), 200),
+                ), 200, 3.14159265359),
                 array(
                     '%url%' => 'http://example.com/',
                     '%http-status-code%' => 200,
+                    '%timing%' => 3.14159265359,
+                    '%timing2%' => 3.14,
                     '%title%' => '',
                     '%composed-title%' => '',
                     '%header-age%' => '13',
@@ -105,10 +107,12 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                     'Last-Modified' => 'now',
                     'ServeR' => 'nginx',
                     'X-PoWered-By' => 'ColdFusion',
-                ), 201),
+                ), 201, 3.14159265359),
                 array(
                     '%url%' => 'https://example.com/',
                     '%http-status-code%' => 201,
+                    '%timing%' => 3.14159265359,
+                    '%timing2%' => 3.14,
                     '%title%' => '',
                     '%composed-title%' => '',
                     '%header-age%' => '',

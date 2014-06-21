@@ -21,17 +21,20 @@ class Url implements UrlInterface
     protected $body;
     protected $headers = array();
     protected $code;
+    protected $timing;
 
     /**
      * @param string $url
      * @param string $body
      * @param array $headers
      * @param int $code
+     * @param float $timing
      */
-    public function __construct($url, $body, array $headers, $code) {
+    public function __construct($url, $body, array $headers, $code, $timing) {
         $this->url = $url;
         $this->body = $body;
         $this->code = $code;
+        $this->timing = $timing;
 
         foreach ($headers as $key => $value) {
             if (is_array($value)) {
@@ -71,5 +74,12 @@ class Url implements UrlInterface
      */
     public function getCode() {
         return $this->code;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTiming() {
+        return $this->timing;
     }
 }

@@ -21,4 +21,5 @@ interface UrlInterface
     public function getCode();
     public function getBody();
     public function getUrl();
+    public function getTiming();
 }
