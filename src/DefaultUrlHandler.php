@@ -56,7 +56,7 @@ class DefaultUrlHandler implements UrlHandlerInterface
         $replacements = $this->getDefaultReplacements($url);
 
         if ($url->getCode() == static::HTTP_STATUS_OK) {
-            if (isset($headers['content-type']) && in_array($headers['content-type'][0], array(
+            if (isset($headers['content-type'][0]) && in_array($headers['content-type'][0], array(
                 'text/html',
                 'text/xhtml',
                 'application/xhtml+xml',
@@ -101,7 +101,7 @@ class DefaultUrlHandler implements UrlHandlerInterface
             'server',
             'x-powered-by',
         ) as $header) {
-            $replacements['%header-' . $header . '%'] = isset($headers[$header]) ? $headers[$header][0] : '';
+            $replacements['%header-' . $header . '%'] = isset($headers[$header][0]) ? $headers[$header][0] : '';
         }
 
         return $replacements;
