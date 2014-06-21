@@ -13,6 +13,7 @@ namespace WyriHaximus\Phergie\Plugin\Url;
 use Phergie\Irc\Bot\React\AbstractPlugin;
 use Phergie\Irc\Event\UserEvent;
 use Phergie\Irc\Bot\React\EventQueue;
+use WyriHaximus\Phergie\Plugin\Http\Request;
 
 /**
  * Plugin for Display URL information about links.
@@ -23,17 +24,26 @@ use Phergie\Irc\Bot\React\EventQueue;
 class Plugin extends AbstractPlugin
 {
     /**
+     * @var UrlHandlerInterface
+     */
+    protected $handler = null;
+
+    /**
      * Accepts plugin configuration.
      *
      * Supported keys:
      *
-     *
+     * handler - handler to create a message for the given URL
      *
      * @param array $config
      */
     public function __construct(array $config = array())
     {
-
+        if (isset($config['handler'])) {
+            $this->handler = $config['handler'];
+        } else {
+            $this->handler = new DefaultUrlHandler();
+        }
     }
 
     /**
@@ -46,6 +56,10 @@ class Plugin extends AbstractPlugin
         return array(
             'irc.received.privmsg' => 'handleIrcReceived',
         );
+    }
+
+    public function getHandler() {
+        return $this->handler;
     }
 
     public function logDebug($message) {
@@ -81,13 +95,17 @@ class Plugin extends AbstractPlugin
         if ($this->emitUrlEvents($requestId, $url, $event, $queue)) {
             $this->logDebug('[' . $requestId . ']Emitting: http.request');
             $that = $this;
-            $this->emitter->emit('http.request', array(new \WyriHaximus\Phergie\Plugin\Http\Request(array(
+            $this->emitter->emit('http.request', array(new Request(array(
                 'url' => $url,
                 'responseCallback' => function($headers, $code) use($requestId, $that) {
                     $that->logDebug('[' . $requestId . ']Reponse: ' . $code);
                 },
-                'resolveCallback' => function($data, $headers, $code) use($requestId, $that) {
+                'resolveCallback' => function($data, $headers, $code) use($requestId, $that, $url, $event, $queue) {
                     $that->logDebug('[' . $requestId . ']Download complete: ' . strlen($data) . ' in length length');
+                    $message = $that->getHandler()->handle(new Url($url, $data, $headers, $code));
+                    foreach ($event->getTargets() as $target) {
+                        $queue->ircPrivmsg($target, $message);
+                    }
                 },
             ))));
         }

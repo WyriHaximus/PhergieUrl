@@ -31,8 +31,9 @@ return array(
         new \WyriHaximus\Phergie\Plugin\Http\Plugin,
 
         new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
+            // All configuration is optional
 
-
+            'handler' => new \WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler(), // URL handler that creates a formatted message based on the URL
 
         )),
 
