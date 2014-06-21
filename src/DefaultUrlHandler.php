@@ -56,7 +56,7 @@ class DefaultUrlHandler implements UrlHandlerInterface
         $replacements = $this->getDefaultReplacements($url);
 
         if ($url->getCode() == static::HTTP_STATUS_OK) {
-            if (isset($headers['Content-Type']) && in_array($headers['Content-Type'], array(
+            if (isset($headers['content-type']) && in_array($headers['content-type'], array(
                 'text/html',
                 'text/xhtml',
                 'application/xhtml+xml',
@@ -85,16 +85,16 @@ class DefaultUrlHandler implements UrlHandlerInterface
             /**
              * Selection of response headers from: http://en.wikipedia.org/wiki/List_of_HTTP_header_fields#Response_Headers
              */
-            '%header-age%' => isset($headers['Age']) ? $headers['Age'] : '',
-            '%header-content-type%' => isset($headers['Content-Type']) ? $headers['Content-Type'] : '',
-            '%header-content-length%' => isset($headers['Content-Length']) ? $headers['Content-Length'] : '',
-            '%header-content-language%' => isset($headers['Content-Language']) ? $headers['Content-Language'] : '',
-            '%header-date%' => isset($headers['Date']) ? $headers['Date'] : '',
-            '%header-etag%' => isset($headers['Etag']) ? $headers['Etag'] : '',
-            '%header-expires%' => isset($headers['Expires']) ? $headers['Expires'] : '',
-            '%header-last-modified%' => isset($headers['Last-Modified']) ? $headers['Last-Modified'] : '',
-            '%header-server%' => isset($headers['Server']) ? $headers['Server'] : '',
-            '%header-x-powered-by%' => isset($headers['X-Powered-By']) ? $headers['X-Powered-By'] : '',
+            '%header-age%' => isset($headers['age']) ? $headers['age'] : '',
+            '%header-content-type%' => isset($headers['content-type']) ? $headers['content-type'] : '',
+            '%header-content-length%' => isset($headers['content-length']) ? $headers['content-length'] : '',
+            '%header-content-language%' => isset($headers['content-language']) ? $headers['content-language'] : '',
+            '%header-date%' => isset($headers['date']) ? $headers['date'] : '',
+            '%header-etag%' => isset($headers['etag']) ? $headers['etag'] : '',
+            '%header-expires%' => isset($headers['expires']) ? $headers['expires'] : '',
+            '%header-last-modified%' => isset($headers['last-modified']) ? $headers['last-modified'] : '',
+            '%header-server%' => isset($headers['server']) ? $headers['server'] : '',
+            '%header-x-powered-by%' => isset($headers['x-powered-by']) ? $headers['x-powered-by'] : '',
             '%title%' => '',
             '%composed-title%' => '',
         );

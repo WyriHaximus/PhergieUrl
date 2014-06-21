@@ -12,16 +12,21 @@ namespace WyriHaximus\Phergie\Plugin\Url;
 
 class UrlTest extends \PHPUnit_Framework_TestCase
 {
-    const URL = 'http://example.com/';
-    const BODY = '<html><title>foo</title></html></html>';
-    const HEADERS = 'Content-Type-text/html';
-    const CODE = 200;
+    private $url = 'http://example.com/';
+    private $body = '<html><title>foo</title></html></html>';
+    private $inputHeaders = array(
+        'Content-Type' => 'text/html',
+    );
+    private $expectedHeaders = array(
+        'content-type' => 'text/html',
+    );
+    private $code = 200;
 
     public function testUrl() {
-        $url = new Url(self::URL, self::BODY, array(self::HEADERS), self::CODE);
-        $this->assertSame(self::URL, $url->getUrl());
-        $this->assertSame(self::BODY, $url->getBody());
-        $this->assertSame(array(self::HEADERS), $url->getHeaders());
-        $this->assertSame(self::CODE, $url->getCode());
+        $url = new Url($this->url, $this->body, $this->inputHeaders, $this->code);
+        $this->assertSame($this->url, $url->getUrl());
+        $this->assertSame($this->body, $url->getBody());
+        $this->assertSame($this->expectedHeaders, $url->getHeaders());
+        $this->assertSame($this->code, $url->getCode());
     }
 }

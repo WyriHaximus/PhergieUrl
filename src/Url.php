@@ -19,7 +19,7 @@ class Url implements UrlInterface
 {
     protected $url;
     protected $body;
-    protected $headers;
+    protected $headers = array();
     protected $code;
 
     /**
@@ -31,8 +31,11 @@ class Url implements UrlInterface
     public function __construct($url, $body, array $headers, $code) {
         $this->url = $url;
         $this->body = $body;
-        $this->headers = $headers;
         $this->code = $code;
+
+        foreach ($headers as $key => $value) {
+            $this->headers[strtolower($key)] = $value;
+        }
     }
 
     /**

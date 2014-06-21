@@ -101,10 +101,10 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
             array(
                 new Url('https://example.com/', '<html><title>bar</title></html></html>', array(
                     'Etag' => 'foo:bar',
-                    'Expires' => 'tomorrow',
+                    'ExpirEs' => 'tomorrow',
                     'Last-Modified' => 'now',
-                    'Server' => 'nginx',
-                    'X-Powered-By' => 'ColdFusion',
+                    'ServeR' => 'nginx',
+                    'X-PoWered-By' => 'ColdFusion',
                 ), 201),
                 array(
                     '%url%' => 'https://example.com/',
