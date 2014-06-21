@@ -16,11 +16,30 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     private $body = '<html><title>foo</title></html></html>';
     private $inputHeaders = array(
         'Content-Type' => 'text/html;charset=utf-8',
+        'Set-Cookie' => array(
+            'text/html;charset=utf-8',
+            'text/html;charset=utf-7',
+            'text/html;charset=utf-16',
+        ),
     );
     private $expectedHeaders = array(
         'content-type' => array(
             'text/html',
             'charset=utf-8',
+        ),
+        'set-cookie' => array(
+            array(
+                'text/html',
+                'charset=utf-8',
+            ),
+            array(
+                'text/html',
+                'charset=utf-7',
+            ),
+            array(
+                'text/html',
+                'charset=utf-16',
+            ),
         ),
     );
     private $code = 200;

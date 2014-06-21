@@ -34,7 +34,14 @@ class Url implements UrlInterface
         $this->code = $code;
 
         foreach ($headers as $key => $value) {
-            $this->headers[strtolower($key)] = explode(';', $value);
+            if (is_array($value)) {
+                $this->headers[strtolower($key)] = array();
+                foreach ($value as $bit) {
+                    $this->headers[strtolower($key)][] = explode(';', $bit);
+                }
+            } else {
+                $this->headers[strtolower($key)] = explode(';', $value);
+            }
         }
     }
 
