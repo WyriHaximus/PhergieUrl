@@ -62,7 +62,7 @@ class DefaultUrlHandler implements UrlHandlerInterface
                 'application/xhtml+xml',
             ))) {
                 if (preg_match('#<title[^>]*>(.*?)</title>#is', $body, $match)) {
-                    $replacements['%composed-title%'] = $replacements['%title%'] = preg_replace('/[\s\v]+/', ' ', trim($match[1]));
+                    $replacements['%composed-title%'] = $replacements['%title%'] = html_entity_decode(preg_replace('/[\s\v]+/', ' ', trim($match[1])));
                 }
             }
         }

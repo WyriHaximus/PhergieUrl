@@ -54,6 +54,13 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 null,
+                new Url('http://example.com/', '<html><title>Phergie &gt; A PHP IRC Bot</title></html></html>', array(
+                    'Content-Type' => 'text/html',
+                ), 200, 3.14159265359),
+                '[ http://example.com/ ] Phergie > A PHP IRC Bot',
+            ),
+            array(
+                null,
                 new Url('http://example.com/', '', array(
                     'Content-Type' => 'odd/non-existing',
                 ), 200, 3.14159265359),
