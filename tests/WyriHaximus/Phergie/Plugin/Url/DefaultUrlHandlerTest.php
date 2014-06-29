@@ -10,6 +10,8 @@
 
 namespace WyriHaximus\Phergie\Plugin\Url;
 
+use Phake;
+
 class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstruct() {
@@ -43,39 +45,21 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
         $handler->handle(new \stdClass());
     }
 
-    public function testHandleProvider() {
-        return array(
-            array(
-                null,
-                new Url('http://example.com/', '<html><title>foo</title></html></html>', array(
-                    'Content-Type' => 'text/html',
-                ), 200, 3.14159265359),
-                '[ http://example.com/ ] foo',
-            ),
-            array(
-                null,
-                new Url('http://example.com/', '<html><title>Phergie &gt; A PHP IRC Bot</title></html></html>', array(
-                    'Content-Type' => 'text/html',
-                ), 200, 3.14159265359),
-                '[ http://example.com/ ] Phergie > A PHP IRC Bot',
-            ),
-            array(
-                null,
-                new Url('http://example.com/', '', array(
-                    'Content-Type' => 'odd/non-existing',
-                ), 200, 3.14159265359),
-                '[ http://example.com/ ] ',
-            ),
-        );
-    }
+    public function testHandle() {
+        $url = new Url('', '', array(), 200, 3.14159265359);
 
-    /**
-     * @dataProvider testHandleProvider
-     */
-    public function testHandle($pattern, $url, $expectedMessage) {
-        $handler = new DefaultUrlHandler($pattern);
+        $handler = Phake::partialMock('WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler');
+        Phake::when($handler)->handle($url)->thenCallParent();
+        Phake::when($handler)->getDefaultReplacements($url)->thenReturn(array());
+        Phake::when($handler)->extract($this->isType('array'), $url)->thenReturn(array());
+
         $message = $handler->handle($url);
-        $this->assertSame($expectedMessage, $message);
+        $this->assertSame(DefaultUrlHandler::DEFAULT_PATTERN, $message);
+
+        Phake::inOrder(
+            Phake::verify($handler)->getDefaultReplacements($url),
+            Phake::verify($handler)->extract($this->isType('array'), $url)
+        );
     }
 
     public function testGetDefaultReplacementsProvider() {

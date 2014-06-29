@@ -10,6 +10,8 @@
 
 namespace WyriHaximus\Phergie\Plugin\Url;
 
+use WyriHaximus\Phergie\Plugin\Url\Mime;
+
 /**
  * Default URL handler to create a message about a
  *
@@ -27,6 +29,8 @@ class DefaultUrlHandler implements UrlHandlerInterface
      */
     protected $pattern;
 
+    protected $mimes;
+
     /**
      * Default pattern used to format feed items if none is provided via
      * configuration
@@ -40,9 +44,17 @@ class DefaultUrlHandler implements UrlHandlerInterface
      *
      * @param string $pattern
      */
-    public function __construct($pattern = null)
+    public function __construct($pattern = null, array $mimes = null)
     {
         $this->pattern = $pattern ? $pattern : static::DEFAULT_PATTERN;
+
+        if ($mimes === null) {
+            $this->mimes = array(
+                new Mime\Html(),
+            );
+        } else {
+            $this->mimes = $mimes;
+        }
     }
 
     public function getPattern() {
@@ -50,22 +62,8 @@ class DefaultUrlHandler implements UrlHandlerInterface
     }
 
     public function handle(UrlInterface $url) {
-        $headers = $url->getHeaders();
-        $body = $url->getBody();
-
         $replacements = $this->getDefaultReplacements($url);
-
-        if ($url->getCode() == static::HTTP_STATUS_OK) {
-            if (isset($headers['content-type'][0]) && in_array($headers['content-type'][0], array(
-                'text/html',
-                'text/xhtml',
-                'application/xhtml+xml',
-            ))) {
-                if (preg_match('#<title[^>]*>(.*?)</title>#is', $body, $match)) {
-                    $replacements['%composed-title%'] = $replacements['%title%'] = html_entity_decode(preg_replace('/[\s\v]+/', ' ', trim($match[1])));
-                }
-            }
-        }
+        $replacements = $this->extract($replacements, $url);
 
         $formatted = str_replace(
             array_keys($replacements),
@@ -104,6 +102,22 @@ class DefaultUrlHandler implements UrlHandlerInterface
             'x-powered-by',
         ) as $header) {
             $replacements['%header-' . $header . '%'] = isset($headers[$header][0]) ? $headers[$header][0] : '';
+        }
+
+        return $replacements;
+    }
+
+    public function extract($replacements, UrlInterface $url) {
+        $headers = $url->getHeaders();
+
+        if ($url->getCode() == static::HTTP_STATUS_OK) {
+            if (isset($headers['content-type'][0])) {
+                foreach ($this->mimes as $mime) {
+                    if (in_array($headers['content-type'][0], $mime->getMatchingList())) {
+                        $replacements = $mime->extract($replacements, $url);
+                    }
+                }
+            }
         }
 
         return $replacements;
