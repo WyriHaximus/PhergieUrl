@@ -137,7 +137,7 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
         $replacements = array();
 
         $html = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Mime\Html');
-        Phake::when($html)->getMatchingList()->thenCallParent();
+        Phake::when($html)->matches('text/html')->thenCallParent();
         Phake::when($html)->extract($replacements, $url)->thenReturn($replacements);
 
         $handler = Phake::partialMock('WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler', null, array(
@@ -147,7 +147,7 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
         $handler->extract(array(), $url);
 
         Phake::inOrder(
-            Phake::verify($html)->getMatchingList(),
+            Phake::verify($html)->matches('text/html'),
             Phake::verify($html)->extract($replacements, $url)
         );
     }
@@ -159,7 +159,7 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
         $replacements = array();
 
         $html = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Mime\Html');
-        Phake::when($html)->getMatchingList()->thenCallParent();
+        Phake::when($html)->matches('text/xml')->thenCallParent();
         Phake::when($html)->extract($replacements, $url)->thenReturn($replacements);
 
         $handler = Phake::partialMock('WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler', null, array(
@@ -168,7 +168,7 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
 
         $handler->extract(array(), $url);
 
-        Phake::verify($html)->getMatchingList();
+        Phake::verify($html)->matches('text/xml');
         Phake::verifyNoFurtherInteraction($html);
     }
 }

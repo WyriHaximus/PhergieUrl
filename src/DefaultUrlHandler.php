@@ -113,7 +113,7 @@ class DefaultUrlHandler implements UrlHandlerInterface
         if ($url->getCode() == static::HTTP_STATUS_OK) {
             if (isset($headers['content-type'][0])) {
                 foreach ($this->mimes as $mime) {
-                    if (in_array($headers['content-type'][0], $mime->getMatchingList())) {
+                    if ($mime->matches($headers['content-type'][0])) {
                         $replacements = $mime->extract($replacements, $url);
                     }
                 }
