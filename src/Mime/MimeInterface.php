@@ -20,9 +20,9 @@ use WyriHaximus\Phergie\Plugin\Url\UrlInterface;
 interface MimeInterface {
 
     /**
-     * @return array List with supported mime types
+     * @return bool if MIME type matches
      */
-    public function getMatchingList();
+    public function matches($mimeType);
 
     /**
      * Extract all possible usefull information from the given url
