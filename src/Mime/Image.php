@@ -22,7 +22,7 @@ class Image implements MimeInterface {
     }
 
     public function extract(array $replacements, UrlInterface $url) {
-        $size = @\getimagesizefromstring($url->getBody());
+        $size = @\getimagesize('data://application/octet-stream;base64,'  . base64_encode($url->getBody()));
         if ($size) {
             $replacements['%image-width%'] = $size[0];
             $replacements['%image-height%'] = $size[1];
