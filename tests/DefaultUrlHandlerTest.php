@@ -8,9 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace WyriHaximus\Phergie\Plugin\Url;
+namespace WyriHaximus\Phergie\Tests\Plugin\Url;
 
 use Phake;
+use WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler;
+use WyriHaximus\Phergie\Plugin\Url\Url;
 
 class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
 {

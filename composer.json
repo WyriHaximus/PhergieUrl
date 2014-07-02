@@ -22,5 +22,10 @@
         "psr-4": {
             "WyriHaximus\\Phergie\\Plugin\\Url\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WyriHaximus\\Phergie\\Tests\\Plugin\\Url\\": "src"
+        }
     }
 }

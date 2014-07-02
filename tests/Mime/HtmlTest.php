@@ -8,33 +8,30 @@
  * file that was distributed with this source code.
  */
 
-namespace WyriHaximus\Phergie\Plugin\Url\Mime;
+namespace WyriHaximus\Phergie\Tests\Plugin\Url\Mime;
 
+use WyriHaximus\Phergie\Plugin\Url\Mime\Html;
 use WyriHaximus\Phergie\Plugin\Url\Url;
 
-class ImageTest extends \PHPUnit_Framework_TestCase {
+class HtmlTest extends \PHPUnit_Framework_TestCase {
 
     public function testMatchesProvider() {
         return array(
             array(
-                false,
+                true,
+                'text/html',
+            ),
+            array(
+                true,
+                'text/xhtml',
+            ),
+            array(
+                true,
                 'application/xhtml+xml',
             ),
             array(
-                true,
+                false,
                 'image/*',
-            ),
-            array(
-                true,
-                'image/psd',
-            ),
-            array(
-                true,
-                'image/jpg',
-            ),
-            array(
-                true,
-                'image/png',
             ),
         );
     }
@@ -43,7 +40,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase {
      * @dataProvider testMatchesProvider
      */
     public function testMatches($expected, $input) {
-        $mime = new Image();
+        $mime = new Html();
         $this->assertSame($expected, $mime->matches($input));
     }
 
@@ -51,12 +48,10 @@ class ImageTest extends \PHPUnit_Framework_TestCase {
         return array(
             array(
                 array(
-                    '%image-width%' => 1,
-                    '%image-height%' => 1,
-                    '%image-channels%' => 3,
-                    '%image-mime%' => 'image/gif',
+                    '%title%' => 'foo',
+                    '%composed-title%' => 'foo',
                 ),
-                new Url('', base64_decode('R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='), array(), 200, 1),
+                new Url('', '<html><title>foo</title></html></html>', array(), 200, 1),
             ),
             array(
                 array(),
@@ -69,7 +64,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase {
      * @dataProvider testExtractProvider
      */
     public function testExtract($expected, $url) {
-        $mime = new Image();
+        $mime = new Html();
         $this->assertSame($expected, $mime->extract(array(), $url));
     }
 
