@@ -25,7 +25,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "WyriHaximus\\Phergie\\Tests\\Plugin\\Url\\": "src"
+            "WyriHaximus\\Phergie\\Tests\\Plugin\\Url\\": "tests"
         }
     }
 }
