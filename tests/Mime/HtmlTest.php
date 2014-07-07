@@ -8,19 +8,40 @@
  * file that was distributed with this source code.
  */
 
-namespace WyriHaximus\Phergie\Plugin\Url\Mime;
+namespace WyriHaximus\Phergie\Tests\Plugin\Url\Mime;
 
+use WyriHaximus\Phergie\Plugin\Url\Mime\Html;
 use WyriHaximus\Phergie\Plugin\Url\Url;
 
 class HtmlTest extends \PHPUnit_Framework_TestCase {
 
-    public function testGetMatchingList() {
+    public function testMatchesProvider() {
+        return array(
+            array(
+                true,
+                'text/html',
+            ),
+            array(
+                true,
+                'text/xhtml',
+            ),
+            array(
+                true,
+                'application/xhtml+xml',
+            ),
+            array(
+                false,
+                'image/*',
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider testMatchesProvider
+     */
+    public function testMatches($expected, $input) {
         $mime = new Html();
-        $this->assertSame(array(
-            'text/html',
-            'text/xhtml',
-            'application/xhtml+xml',
-        ), $mime->getMatchingList());
+        $this->assertSame($expected, $mime->matches($input));
     }
 
     public function testExtractProvider() {

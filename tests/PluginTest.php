@@ -8,11 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace WyriHaximus\Phergie\Plugin\Url;
+namespace WyriHaximus\Phergie\Tests\Plugin\Url;
 
-use Phake;
-use Phergie\Irc\Event\EventInterface;
-use Phergie\Irc\Bot\React\EventQueueInterface;
+use WyriHaximus\Phergie\Plugin\Url\Plugin;
 
 /**
  * Tests for the Plugin class.

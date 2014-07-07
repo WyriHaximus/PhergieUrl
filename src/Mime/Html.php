@@ -14,12 +14,12 @@ use WyriHaximus\Phergie\Plugin\Url\UrlInterface;
 
 class Html implements MimeInterface {
 
-    public function getMatchingList() {
-        return array(
+    public function matches($mimeType) {
+        return in_array($mimeType, array(
             'text/html',
             'text/xhtml',
             'application/xhtml+xml',
-        );
+        ));
     }
 
     public function extract(array $replacements, UrlInterface $url) {
