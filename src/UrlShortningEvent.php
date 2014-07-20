@@ -18,4 +18,18 @@ namespace WyriHaximus\Phergie\Plugin\Url;
  */
 class UrlShortningEvent
 {
+    protected $url;
+    protected $promise;
+
+    public function __construct(UrlInterface $url, $promise) {
+        $this->url = $url;
+        $this->promise = $promise;
+    }
+
+    public function getUrl() {
+        return $this->url;
+    }
+    public function getPromise() {
+        return $this->promise;
+    }
 }
