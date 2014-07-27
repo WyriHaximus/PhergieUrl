@@ -43,7 +43,7 @@ return array(
 
 ## Events
 
-This plugin emails the following events
+This plugin emits the following events
 
 * `url.host.HOSTNAME` For example `url.host.twitter.com` (`www.` is stripped from the hostname).
 * `url.host.all` For all hostnames.
