@@ -30,6 +30,7 @@ return array(
         new \WyriHaximus\Phergie\Plugin\Dns\Plugin, // Handles DNS lookups for the HTTP plugin
         new \WyriHaximus\Phergie\Plugin\Http\Plugin, // Handles the HTTP requests for this plugin
 
+        // configuration
         new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
             // All configuration is optional
 
