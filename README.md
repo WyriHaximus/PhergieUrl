@@ -27,8 +27,8 @@ return array(
     'plugins' => array(
 
         // dependencies
-        new \WyriHaximus\Phergie\Plugin\Dns\Plugin,
-        new \WyriHaximus\Phergie\Plugin\Http\Plugin,
+        new \WyriHaximus\Phergie\Plugin\Dns\Plugin, // Handles DNS lookups for the HTTP plugin
+        new \WyriHaximus\Phergie\Plugin\Http\Plugin, // Handles the HTTP requests for this plugin
 
         new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
             // All configuration is optional
