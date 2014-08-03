@@ -55,7 +55,7 @@ This plugin emits the following generic, do what ever you want with it, events.
 
 This plugins also emits two events for url shortning. Only called when there are listeners registered. Each event emit is passed a `UrlShortningEvent`, if a shortner resolved short url it calls the `resolve` method on the promise.
 
-* `url.shorting.HOSTNAME` For example `url.host.twitter.com` (`www.` is stripped from the hostname).
+* `url.shorting.HOSTNAME` For example `url.shorting.twitter.com` (`www.` is stripped from the hostname).
 * `url.shorting.all` For all hostnames.
 
 ## Tests
