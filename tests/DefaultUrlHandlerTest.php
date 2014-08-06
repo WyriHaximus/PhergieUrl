@@ -50,13 +50,12 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
     public function testHandle() {
         $url = new Url('', '', array(), 200, 3.14159265359);
 
-        $promise = Phake::mock('React\Promise\DeferredPromise');
         $handler = Phake::partialMock('WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler');
         Phake::when($handler)->handle($url)->thenCallParent();
         Phake::when($handler)->getDefaultReplacements($url)->thenReturn(array());
         Phake::when($handler)->extract($this->isType('array'), $url)->thenReturn(array());
 
-        $message = $handler->handle($url, $promise);
+        $message = $handler->handle($url);
         $this->assertSame(DefaultUrlHandler::DEFAULT_PATTERN, $message);
 
         Phake::inOrder(

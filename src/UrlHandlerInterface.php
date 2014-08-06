@@ -10,9 +10,7 @@
 
 namespace WyriHaximus\Phergie\Plugin\Url;
 
-use React\Promise\DeferredPromise;
-
 interface UrlHandlerInterface
 {
-    public function handle(UrlInterface $url, DeferredPromise $promise);
+    public function handle(UrlInterface $url);
 }
