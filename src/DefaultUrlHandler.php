@@ -79,6 +79,7 @@ class DefaultUrlHandler implements UrlHandlerInterface
 
         $replacements = array(
             '%url%' => $url->getUrl(),
+            '%url-short%' => $url->getShortUrl(),
             '%http-status-code%' => $url->getCode(),
             '%timing%' => $url->getTiming(),
             '%timing2%' => round($url->getTiming(), 2),
