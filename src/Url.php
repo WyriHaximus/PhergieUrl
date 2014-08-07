@@ -22,6 +22,7 @@ class Url implements UrlInterface
     protected $headers = array();
     protected $code;
     protected $timing;
+    protected $shortUrl;
 
     /**
      * @param string $url
@@ -30,11 +31,16 @@ class Url implements UrlInterface
      * @param int $code
      * @param float $timing
      */
-    public function __construct($url, $body, array $headers, $code, $timing) {
+    public function __construct($url, $body, array $headers, $code, $timing, $shortUrl = null) {
         $this->url = $url;
         $this->body = $body;
         $this->code = $code;
         $this->timing = $timing;
+
+        if ($shortUrl === null) {
+            $shortUrl = $url;
+        }
+        $this->shortUrl = $shortUrl;
 
         foreach ($headers as $key => $value) {
             if (is_array($value)) {
@@ -81,5 +87,11 @@ class Url implements UrlInterface
      */
     public function getTiming() {
         return $this->timing;
+    }
+    /**
+     * @return string
+     */
+    public function getShortUrl() {
+        return $this->shortUrl;
     }
 }

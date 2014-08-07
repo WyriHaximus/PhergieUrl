@@ -54,5 +54,15 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->expectedHeaders, $url->getHeaders());
         $this->assertSame($this->code, $url->getCode());
         $this->assertSame($this->timing, $url->getTiming());
+        $this->assertSame($this->url, $url->getShortUrl());
+    }
+    public function testShortUrl() {
+        $url = new Url($this->url, $this->body, $this->inputHeaders, $this->code, $this->timing, 'http://t.co/');
+        $this->assertSame($this->url, $url->getUrl());
+        $this->assertSame($this->body, $url->getBody());
+        $this->assertSame($this->expectedHeaders, $url->getHeaders());
+        $this->assertSame($this->code, $url->getCode());
+        $this->assertSame($this->timing, $url->getTiming());
+        $this->assertSame('http://t.co/', $url->getShortUrl());
     }
 }
