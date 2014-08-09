@@ -73,9 +73,10 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                     'Content-Length' => 128,
                     'Content-Language' => 'nl',
                     'Date' => 'The Darkages',
-                ), 200, 3.14159265359),
+                ), 200, 3.14159265359, 'http://short.example.com/'),
                 array(
                     '%url%' => 'http://example.com/',
+                    '%url-short%' => 'http://short.example.com/',
                     '%http-status-code%' => 200,
                     '%timing%' => 3.14159265359,
                     '%timing2%' => 3.14,
@@ -103,6 +104,7 @@ class DefaultUrlHandlerTest extends \PHPUnit_Framework_TestCase
                 ), 201, 3.14159265359),
                 array(
                     '%url%' => 'https://example.com/',
+                    '%url-short%' => 'https://example.com/',
                     '%http-status-code%' => 201,
                     '%timing%' => 3.14159265359,
                     '%timing2%' => 3.14,
