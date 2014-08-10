@@ -58,12 +58,12 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testGetHandler() {
         $plugin = new Plugin();
-        $this->assertTrue(in_array('WyriHaximus\Phergie\Plugin\Url\UrlHandlerInterface', class_implements($plugin->getHandler())));
-        $this->assertInstanceOf('\WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler', $plugin->getHandler());
+        $this->assertInstanceOf('WyriHaximus\Phergie\Plugin\Url\UrlHandlerInterface', $plugin->getHandler());
+        $this->assertInstanceOf('WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler', $plugin->getHandler());
     }
 
     public function testCustomHandler() {
-        $handler = Phake::mock('\WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler');
+        $handler = Phake::mock('WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler');
         $plugin = new Plugin(array(
             'handler' => $handler,
         ));
@@ -76,7 +76,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin = new Plugin(array(
             'handler' => $handler,
         ));
-        $this->assertInstanceOf('\WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler', $plugin->getHandler());
+        $this->assertInstanceOf('WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler', $plugin->getHandler());
     }
 
     public function testHandleIrcReceived() {
@@ -87,7 +87,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             'text' => 'test www.google.com test',
         ));
 
-        $plugin = Phake::mock('\WyriHaximus\Phergie\Plugin\Url\Plugin');
+        $plugin = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin');
         Phake::when($plugin)->handleIrcReceived($event, $queue)->thenCallParent();
 
         $plugin->handleIrcReceived($event, $queue);
@@ -101,7 +101,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
         list($privateDeferred, $userFacingPromise) = self::getMethod('preparePromises')->invoke($plugin);
 
-        $this->assertInstanceOf('\React\Promise\Deferred', $privateDeferred);
-        $this->assertInstanceOf('\React\Promise\PromiseInterface', $userFacingPromise);
+        $this->assertInstanceOf('React\Promise\Deferred', $privateDeferred);
+        $this->assertInstanceOf('React\Promise\PromiseInterface', $userFacingPromise);
     }
 }
