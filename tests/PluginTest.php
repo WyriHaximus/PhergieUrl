@@ -71,4 +71,20 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         ));
         $this->assertInstanceOf('\WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler', $plugin->getHandler());
     }
+
+    public function testHandleIrcReceived() {
+        $queue = Phake::mock('Phergie\Irc\Bot\React\EventQueue');
+
+        $event = Phake::mock('Phergie\Irc\Event\UserEvent');
+        Phake::when($event)->getParams()->thenReturn(array(
+            'text' => 'test www.google.com test',
+        ));
+
+        $plugin = Phake::mock('\WyriHaximus\Phergie\Plugin\Url\Plugin');
+        Phake::when($plugin)->handleIrcReceived($event, $queue)->thenCallParent();
+
+        $plugin->handleIrcReceived($event, $queue);
+
+        Phake::verify($plugin)->handleUrl('www.google.com', $event, $queue);
+    }
 }
