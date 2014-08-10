@@ -65,4 +65,41 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->timing, $url->getTiming());
         $this->assertSame('http://t.co/', $url->getShortUrl());
     }
+
+
+    public function testExtractHostProvider() {
+        return array(
+            array(
+                'www.google.com',
+                'google.com',
+            ),
+            array(
+                'google.com',
+                'google.com',
+            ),
+            array(
+                'http://www.google.com/',
+                'google.com',
+            ),
+            array(
+                'http://google.com/',
+                'google.com',
+            ),
+            array(
+                'https://www.google.com/',
+                'google.com',
+            ),
+            array(
+                'https://google.com/',
+                'google.com',
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider testExtractHostProvider
+     */
+    public function testExtractHost($input, $expected) {
+        $this->assertSame($expected, Url::extractHost($input));
+    }
 }

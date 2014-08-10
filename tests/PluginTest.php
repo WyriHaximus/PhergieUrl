@@ -21,13 +21,6 @@ use WyriHaximus\Phergie\Plugin\Url\Plugin;
  */
 class PluginTest extends \PHPUnit_Framework_TestCase
 {
-    protected static function getMethod($name) {
-        $class = new \ReflectionClass('WyriHaximus\Phergie\Plugin\Url\Plugin');
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
-    }
-
     /**
      * Tests that getSubscribedEvents() returns an array.
      */
@@ -77,34 +70,5 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             'handler' => $handler,
         ));
         $this->assertInstanceOf('\WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler', $plugin->getHandler());
-    }
-
-    public function testExtractHostProvider() {
-        return array(
-            array(
-                'www.google.com',
-                'google.com',
-            ),
-            array(
-                'google.com',
-                'google.com',
-            ),
-            array(
-                'http://www.google.com/',
-                'google.com',
-            ),
-            array(
-                'http://google.com/',
-                'google.com',
-            ),
-        );
-    }
-
-    /**
-     * @dataProvider testExtractHostProvider
-     */
-    public function testExtractHost($input, $expected) {
-        $method = self::getMethod('extractHost');
-        $this->assertSame($expected, $method->invokeArgs(new Plugin(), array($input)));
     }
 }

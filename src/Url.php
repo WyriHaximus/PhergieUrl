@@ -94,4 +94,26 @@ class Url implements UrlInterface
     public function getShortUrl() {
         return $this->shortUrl;
     }
+
+
+    /**
+     * @param string $url
+     *
+     * @return string
+     */
+    public static function extractHost($url) {
+        $parsedUrl = parse_url($url);
+
+        if (count($parsedUrl) == 1 && isset($parsedUrl['path'])) {
+            $host = $parsedUrl['path'];
+        } else {
+            $host = $parsedUrl['host'];
+        }
+
+        if (substr($host, 0, 4) == 'www.') {
+            $host = substr($host, 4);
+        }
+
+        return $host;
+    }
 }
