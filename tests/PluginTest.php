@@ -21,6 +21,13 @@ use WyriHaximus\Phergie\Plugin\Url\Plugin;
  */
 class PluginTest extends \PHPUnit_Framework_TestCase
 {
+    protected static function getMethod($name) {
+        $class = new \ReflectionClass('WyriHaximus\Phergie\Plugin\Url\Plugin');
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
+    }
+
     /**
      * Tests that getSubscribedEvents() returns an array.
      */
@@ -86,5 +93,15 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin->handleIrcReceived($event, $queue);
 
         Phake::verify($plugin)->handleUrl('www.google.com', $event, $queue);
+    }
+
+    public function testPreparePromises() {
+        $plugin = new Plugin();
+        $plugin->setLoop(Phake::mock('React\EventLoop\LoopInterface'));
+
+        list($privateDeferred, $userFacingPromise) = self::getMethod('preparePromises')->invoke($plugin);
+
+        $this->assertInstanceOf('\React\Promise\Deferred', $privateDeferred);
+        $this->assertInstanceOf('\React\Promise\PromiseInterface', $userFacingPromise);
     }
 }
