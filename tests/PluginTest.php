@@ -125,4 +125,34 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
         Phake::verify($queue)->ircPrivmsg($target, $message);
     }
+
+    public function testEmitUrlEvents() {
+        $host = 'google.com';
+        $eventName = 'url.host.' . $host;
+        $url = 'http://' . $host . '/';
+
+        $queue = Phake::mock('Phergie\Irc\Bot\React\EventQueue');
+        $event = Phake::mock('Phergie\Irc\Event\UserEvent');
+
+        $emitter = Phake::mock('Evenement\EventEmitterInterface');
+        Phake::when($emitter)->listeners($eventName)->thenReturn(array('foo' => 'bar'));
+
+        $logger = Phake::mock('Monolog\Logger');
+
+        $plugin = new Plugin();
+        $plugin->setEventEmitter($emitter);
+        $plugin->setLogger($logger);
+
+        $this->assertNotTrue(self::getMethod('emitUrlEvents')->invokeArgs($plugin, array(
+            'foo:bar',
+            $url,
+            $event,
+            $queue,
+        )));
+
+        Phake::inOrder(
+            Phake::verify($emitter)->listeners($eventName),
+            Phake::verify($emitter)->emit($eventName, array($url, $event, $queue))
+        );
+    }
 }
