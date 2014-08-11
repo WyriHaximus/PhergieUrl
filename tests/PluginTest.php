@@ -153,4 +153,81 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             Phake::verify($emitter)->emit($eventName, array($url, $event, $queue))
         );
     }
+
+    public function testEmitShortningEventsProvider() {
+        return array(
+            array(
+                'url.shorting.google.com',
+                'http://google.com/',
+            ),
+            array(
+                'url.shorting.all',
+                'http://google.com/',
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider testEmitShortningEventsProvider
+     */
+    public function testEmitShortningEvents($eventName, $url) {
+        $logger = Phake::mock('Monolog\Logger');
+        $privateDeferred = Phake::mock('React\Promise\Deferred');
+
+        $emitter = Phake::mock('Evenement\EventEmitterInterface');
+        Phake::when($emitter)->listeners($eventName)->thenReturn(array('foo' => 'bar'));
+
+        $plugin = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin');
+        Phake::when($plugin)->preparePromises()->thenReturn(array(
+            $privateDeferred,
+            Phake::mock('React\Promise\PromiseInterface'),
+        ));
+        Phake::when($plugin)->setEventEmitter($emitter)->thenCallParent();
+        Phake::when($plugin)->setLogger($logger)->thenCallParent();
+
+        $plugin->setEventEmitter($emitter);
+        $plugin->setLogger($logger);
+
+        $this->assertInstanceOf('React\Promise\PromiseInterface', self::getMethod('emitShortningEvents')->invokeArgs($plugin, array(
+            'foo:bar',
+            $url,
+        )));
+
+        Phake::inOrder(
+            Phake::verify($emitter)->listeners($eventName),
+            Phake::verify($emitter)->emit($eventName, array($url, $privateDeferred))
+        );
+    }
+
+    public function testEmitShortningNone() {
+        $loop = Phake::mock('React\EventLoop\LoopInterface');
+        $url = 'http://google.com/';
+        $logger = Phake::mock('Monolog\Logger');
+        $privateDeferred = Phake::mock('React\Promise\Deferred');
+
+        Phake::when($loop)->listeners('url.shorting.google.com')->thenReturn(array());
+
+        $emitter = Phake::mock('Evenement\EventEmitterInterface');
+        $plugin = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin');
+        Phake::when($plugin)->preparePromises()->thenReturn(array(
+            $privateDeferred,
+            Phake::mock('React\Promise\PromiseInterface'),
+        ));
+        Phake::when($plugin)->setEventEmitter($emitter)->thenCallParent();
+        Phake::when($plugin)->setLogger($logger)->thenCallParent();
+        Phake::when($plugin)->setLoop($loop)->thenCallParent();
+
+        $plugin->setEventEmitter($emitter);
+        $plugin->setLogger($logger);
+        $plugin->setLoop($loop);
+
+        $this->assertInstanceOf('React\Promise\PromiseInterface', self::getMethod('emitShortningEvents')->invokeArgs($plugin, array(
+            'foo:bar',
+            $url,
+        )));
+
+        Phake::inOrder(
+            Phake::verify($loop)->addTimer(0.1, $this->isType('callable'))
+        );
+    }
 }
