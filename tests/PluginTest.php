@@ -104,4 +104,25 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('React\Promise\Deferred', $privateDeferred);
         $this->assertInstanceOf('React\Promise\PromiseInterface', $userFacingPromise);
     }
+
+    public function testSendMessage() {
+        $target = '#foobar';
+        $message = 'foo:bar';
+
+        $url = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Url');
+        $handler = Phake::mock('WyriHaximus\Phergie\Plugin\Url\UrlHandlerInterface');
+        Phake::when($handler)->handle($url)->thenReturn($message);
+
+        $plugin = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin');
+        Phake::when($plugin)->getHandler()->thenReturn($handler);
+
+        $event = Phake::mock('Phergie\Irc\Event\UserEvent');
+        Phake::when($event)->getTargets()->thenReturn(array($target));
+
+        $queue = Phake::mock('Phergie\Irc\Bot\React\EventQueue');
+
+        self::getMethod('sendMessage')->invokeArgs($plugin, array($url, $event, $queue));
+
+        Phake::verify($queue)->ircPrivmsg($target, $message);
+    }
 }
