@@ -137,11 +137,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $emitter = Phake::mock('Evenement\EventEmitterInterface');
         Phake::when($emitter)->listeners($eventName)->thenReturn(array('foo' => 'bar'));
 
-        $logger = Phake::mock('Monolog\Logger');
-
         $plugin = new Plugin();
         $plugin->setEventEmitter($emitter);
-        $plugin->setLogger($logger);
+        $plugin->setLogger(Phake::mock('Monolog\Logger'));
 
         $this->assertNotTrue(self::getMethod('emitUrlEvents')->invokeArgs($plugin, array(
             'foo:bar',
