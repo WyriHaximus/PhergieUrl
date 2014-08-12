@@ -230,4 +230,34 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             Phake::verify($loop)->addTimer(0.1, $this->isType('callable'))
         );
     }
+
+    public function testCreateRequest() {
+        $url = 'http://example.com/';
+
+        $queue = Phake::mock('Phergie\Irc\Bot\React\EventQueue');
+        $event = Phake::mock('Phergie\Irc\Event\UserEvent');
+
+        $plugin = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin');
+        $request = self::getMethod('createRequest')->invokeArgs($plugin, array(
+            'foo:bar',
+            $url,
+            $event,
+            $queue,
+        ));
+        $this->assertInstanceOf('WyriHaximus\Phergie\Plugin\Http\Request', $request);
+
+        $request->callResponse([
+            'foo' => 'bar',
+        ], 200);
+
+        Phake::when($plugin)->emitShortningEvents($this->isType('string'), $this->isType('string'), $event, $queue)->thenReturn(Phake::mock('React\Promise\PromiseInterface'));
+        $request->callResolve('', [
+            'foo' => 'bar',
+        ], 200);
+
+        Phake::inOrder(
+            Phake::verify($plugin, Phake::times(2))->logDebug($this->isType('string')),
+            Phake::verify($plugin)->emitShortningEvents($this->isType('string'), $this->isType('string'), $event, $queue)
+        );
+    }
 }
