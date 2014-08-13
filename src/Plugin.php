@@ -10,9 +10,12 @@
 
 namespace WyriHaximus\Phergie\Plugin\Url;
 
+use React\EventLoop\LoopInterface;
 use Phergie\Irc\Bot\React\AbstractPlugin;
-use Phergie\Irc\Event\UserEvent;
 use Phergie\Irc\Bot\React\EventQueue;
+use Phergie\Irc\Client\React\LoopAwareInterface;
+use Phergie\Irc\Event\UserEvent;
+use React\Promise\Deferred;
 use WyriHaximus\Phergie\Plugin\Http\Request;
 
 /**
@@ -21,12 +24,21 @@ use WyriHaximus\Phergie\Plugin\Http\Request;
  * @category Phergie
  * @package WyriHaximus\Phergie\Plugin\Url
  */
-class Plugin extends AbstractPlugin
+class Plugin extends AbstractPlugin implements LoopAwareInterface
 {
     /**
      * @var UrlHandlerInterface
      */
     protected $handler = null;
+    /**
+     * @var UrlHandlerInterface
+     */
+    protected $shortingTimeout = 15;
+
+    /**
+     * @var LoopInterface
+     */
+    protected $loop;
 
     /**
      * Accepts plugin configuration.
@@ -34,16 +46,27 @@ class Plugin extends AbstractPlugin
      * Supported keys:
      *
      * handler - handler to create a message for the given URL
+     * shortingTimeout - timeout in seconds how long it can take to short an URL
      *
      * @param array $config
      */
     public function __construct(array $config = array())
     {
-        if (isset($config['handler'])) {
+        if (isset($config['handler']) && in_array('WyriHaximus\Phergie\Plugin\Url\UrlHandlerInterface', class_implements($config['handler']))) {
             $this->handler = $config['handler'];
         } else {
             $this->handler = new DefaultUrlHandler();
         }
+        if (isset($config['shortingTimeout'])) {
+            $this->shortingTimeout = $config['shortingTimeout'];
+        }
+    }
+
+    /**
+     * @param LoopInterface $loop
+     */
+    public function setLoop(LoopInterface $loop) {
+        $this->loop = $loop;
     }
 
     /**
@@ -58,6 +81,9 @@ class Plugin extends AbstractPlugin
         );
     }
 
+    /**
+     * @return UrlHandlerInterface
+     */
     public function getHandler() {
         return $this->handler;
     }
@@ -77,11 +103,21 @@ class Plugin extends AbstractPlugin
         }
     }
 
-    protected function handleUrl($url, $event, $queue) {
+    /**
+     * @param string $url
+     * @param UserEvent $event
+     * @param EventQueue $queue
+     *
+     * @return bool
+     */
+    protected function handleUrl($url, UserEvent $event, EventQueue $queue) {
         $parsedUrl = parse_url($url);
 
-        if (!isset($parsedUrl['host']) && !isset($parsedUrl['path'])) {
-            return;
+        if (
+            (!isset($parsedUrl['host']) && !isset($parsedUrl['path'])) ||
+            (!isset($parsedUrl['host']) && isset($parsedUrl['path']) && $parsedUrl['path'] == '')
+           ) {
+            return false;
         }
 
         $requestId = uniqid();
@@ -94,41 +130,54 @@ class Plugin extends AbstractPlugin
 
         if ($this->emitUrlEvents($requestId, $url, $event, $queue)) {
             $this->logDebug('[' . $requestId . ']Emitting: http.request');
-            $that = $this;
-            $start = microtime(true);
-            $this->emitter->emit('http.request', array(new Request(array(
-                'url' => $url,
-                'responseCallback' => function($headers, $code) use($requestId, $that, $start) {
-                    $end = microtime(true);
-                    $that->logDebug('[' . $requestId . ']Reponse (after ' . ($end - $start) . 's): ' . $code);
-                },
-                'resolveCallback' => function($data, $headers, $code) use($requestId, $that, $url, $event, $queue, $start) {
-                    $end = microtime(true);
-                    $that->logDebug('[' . $requestId . ']Download complete (after ' . ($end - $start) . 's): ' . strlen($data) . ' in length length');
-                    $message = $that->getHandler()->handle(new Url($url, $data, $headers, $code, $end - $start));
-                    foreach ($event->getTargets() as $target) {
-                        $queue->ircPrivmsg($target, $message);
-                    }
-                },
-            ))));
+            $this->emitter->emit('http.request', array($this->createRequest($requestId, $url, $event, $queue)));
         }
 
         $this->logDebug('[' . $requestId . ']Emitting: url.host.all');
         $this->emitter->emit('url.host.all', array($url, $event, $queue));
+
+        return true;
     }
 
+    /**
+     * @param string $requestId
+     * @param string $url
+     * @param UserEvent $event
+     * @param EventQueue $queue
+     *
+     * @return Request
+     */
+    protected function createRequest($requestId, $url, UserEvent $event, EventQueue $queue) {
+        $start = microtime(true);
+        $that = $this;
+        return new Request(array(
+            'url' => $url,
+            'responseCallback' => function($headers, $code) use($requestId, $that, $start) {
+                $end = microtime(true);
+                $that->logDebug('[' . $requestId . ']Reponse (after ' . ($end - $start) . 's): ' . $code);
+            },
+            'resolveCallback' => function($data, $headers, $code) use($requestId, $that, $url, $event, $queue, $start) {
+                $end = microtime(true);
+                $that->logDebug('[' . $requestId . ']Download complete (after ' . ($end - $start) . 's): ' . strlen($data) . ' in length length');
+                $this->emitShortningEvents($requestId, $url, $event, $queue)->then(function($shortUrl) use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue){
+                    $that->sendMessage(new Url($url, $data, $headers, $code, $end - $start, $shortUrl), $event, $queue);
+                }, function() use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue){
+                    $that->sendMessage(new Url($url, $data, $headers, $code, $end - $start), $event, $queue);
+                });
+            },
+        ));
+    }
+
+    /**
+     * @param string $requestId
+     * @param string $url
+     * @param UserEvent $event
+     * @param EventQueue $queue
+     *
+     * @return bool
+     */
     protected function emitUrlEvents($requestId, $url, UserEvent $event, EventQueue $queue) {
-        $parsedUrl = parse_url($url);
-
-        if (count($parsedUrl) == 1 && isset($parsedUrl['path'])) {
-            $host = $parsedUrl['path'];
-        } else {
-            $host = $parsedUrl['host'];
-        }
-
-        if (substr($host, 0, 4) == 'www.') {
-            $host = substr($host, 4);
-        }
+        $host = Url::extractHost($url);
 
         $eventName = 'url.host.' . $host;
         if (count($this->emitter->listeners($eventName)) > 0) {
@@ -139,5 +188,66 @@ class Plugin extends AbstractPlugin
             return true;
         }
     }
-    
+
+    /**
+     * @param string $requestId
+     * @param string $url
+     *
+     * @return \React\Promise\DeferredPromise
+     */
+    protected function emitShortningEvents($requestId, $url) {
+        $host = Url::extractHost($url);
+        list($privateDeferred, $userFacingPromise) = $this->preparePromises();
+
+        $eventName = 'url.shorting.';
+        if (count($this->emitter->listeners($eventName . $host)) > 0) {
+            $eventName .= $host;
+            $this->logDebug('[' . $requestId . ']Emitting: ' . $eventName);
+            $this->emitter->emit($eventName, array($url, $privateDeferred));
+        } elseif (count($this->emitter->listeners($eventName . 'all')) > 0) {
+            $eventName .= 'all';
+            $this->logDebug('[' . $requestId . ']Emitting: ' . $eventName);
+            $this->emitter->emit($eventName, array($url, $privateDeferred));
+        } else {
+            $this->loop->addTimer(0.1, function() use ($privateDeferred) {
+                $privateDeferred->reject();
+            });
+        }
+
+        return $userFacingPromise;
+    }
+
+    /**
+     * @return array
+     */
+    protected function preparePromises() {
+        $userFacingDeferred = new Deferred();
+        $privateDeferred = new Deferred();
+        $userFacingPromise = $userFacingDeferred->promise();
+        $privateDeferred->promise()->then(function($shortUrl) use ($userFacingDeferred) {
+            $userFacingDeferred->resolve($shortUrl);
+        }, function() use ($userFacingDeferred) {
+            $userFacingDeferred->reject();
+        });
+        $this->loop->addTimer($this->shortingTimeout, function() use ($privateDeferred) {
+            $privateDeferred->reject();
+        });
+
+        return array(
+            $privateDeferred,
+            $userFacingPromise,
+        );
+    }
+
+    /**
+     * @param Url $url
+     * @param UserEvent $event
+     * @param EventQueue $queue
+     */
+    protected function sendMessage(Url $url, UserEvent $event, EventQueue $queue) {
+        $message = $this->getHandler()->handle($url);
+        foreach ($event->getTargets() as $target) {
+            $queue->ircPrivmsg($target, $message);
+        }
+    }
 }
