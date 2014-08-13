@@ -110,7 +110,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return bool
      */
-    protected function handleUrl($url, UserEvent $event, EventQueue $queue) {
+    public function handleUrl($url, UserEvent $event, EventQueue $queue) {
         $parsedUrl = parse_url($url);
 
         if (
@@ -147,7 +147,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return Request
      */
-    protected function createRequest($requestId, $url, UserEvent $event, EventQueue $queue) {
+    public function createRequest($requestId, $url, UserEvent $event, EventQueue $queue) {
         $start = microtime(true);
         $that = $this;
         return new Request(array(
@@ -176,7 +176,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return bool
      */
-    protected function emitUrlEvents($requestId, $url, UserEvent $event, EventQueue $queue) {
+    public function emitUrlEvents($requestId, $url, UserEvent $event, EventQueue $queue) {
         $host = Url::extractHost($url);
 
         $eventName = 'url.host.' . $host;
@@ -195,7 +195,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return \React\Promise\DeferredPromise
      */
-    protected function emitShortningEvents($requestId, $url) {
+    public function emitShortningEvents($requestId, $url) {
         $host = Url::extractHost($url);
         list($privateDeferred, $userFacingPromise) = $this->preparePromises();
 
@@ -220,7 +220,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @return array
      */
-    protected function preparePromises() {
+    public function preparePromises() {
         $userFacingDeferred = new Deferred();
         $privateDeferred = new Deferred();
         $userFacingPromise = $userFacingDeferred->promise();
@@ -244,7 +244,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      * @param UserEvent $event
      * @param EventQueue $queue
      */
-    protected function sendMessage(Url $url, UserEvent $event, EventQueue $queue) {
+    public function sendMessage(Url $url, UserEvent $event, EventQueue $queue) {
         $message = $this->getHandler()->handle($url);
         foreach ($event->getTargets() as $target) {
             $queue->ircPrivmsg($target, $message);
