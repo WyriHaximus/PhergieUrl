@@ -260,4 +260,86 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             Phake::verify($plugin)->emitShortningEvents($this->isType('string'), $this->isType('string'), $event, $queue)
         );
     }
+
+    public function testHandleUrlUselessUrlProvider() {
+        return array(
+            array(''),
+            array('http://'),
+            array('//'),
+        );
+    }
+
+    /**
+     * @dataProvider testHandleUrlUselessUrlProvider
+     */
+    public function testHandleUrlUselessUrl($url) {
+        $this->assertNotTrue(self::getMethod('handleUrl')->invokeArgs(Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin'), array(
+            $url,
+            Phake::mock('Phergie\Irc\Event\UserEvent'),
+            Phake::mock('Phergie\Irc\Bot\React\EventQueue'),
+        )));
+    }
+
+    public function testHandleUrlNoRequest() {
+        $url = 'example.com';
+        $correctedUrl = 'http://example.com/';
+
+        $queue = Phake::mock('Phergie\Irc\Bot\React\EventQueue');
+        $event = Phake::mock('Phergie\Irc\Event\UserEvent');
+
+        $emitter = Phake::mock('Evenement\EventEmitterInterface');
+
+        $plugin = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin');
+        Phake::when($plugin)->setEventEmitter($emitter)->thenCallParent();
+        Phake::when($plugin)->emitUrlEvents($this->isType('string'), $correctedUrl, $event, $queue)->thenReturn(false);
+        $plugin->setEventEmitter($emitter);
+
+
+        $this->assertTrue(self::getMethod('handleUrl')->invokeArgs($plugin, array(
+            $url,
+            $event,
+            $queue,
+        )));
+
+        Phake::inOrder(
+            Phake::verify($plugin)->emitUrlEvents($this->isType('string'), $correctedUrl, $event, $queue),
+            Phake::verify($emitter)->emit('url.host.all', array(
+                $correctedUrl,
+                $event,
+                $queue,
+            ))
+        );
+    }
+
+    public function testHandleUrlRequest() {
+        $url = 'http://example.com/';
+
+        $queue = Phake::mock('Phergie\Irc\Bot\React\EventQueue');
+        $event = Phake::mock('Phergie\Irc\Event\UserEvent');
+        $emitter = Phake::mock('Evenement\EventEmitterInterface');
+        $request = Phake::mock('WyriHaximus\Phergie\Plugin\Http\Request');
+
+        $plugin = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin');
+        Phake::when($plugin)->setEventEmitter($emitter)->thenCallParent();
+        Phake::when($plugin)->emitUrlEvents($this->isType('string'), $url, $event, $queue)->thenReturn(true);
+        Phake::when($plugin)->createRequest($this->isType('string'), $url, $event, $queue)->thenReturn($request);
+        $plugin->setEventEmitter($emitter);
+
+
+        $this->assertTrue(self::getMethod('handleUrl')->invokeArgs($plugin, array(
+            $url,
+            $event,
+            $queue,
+        )));
+
+        Phake::inOrder(
+            Phake::verify($plugin)->emitUrlEvents($this->isType('string'), $url, $event, $queue),
+            Phake::verify($emitter)->emit('http.request', array($request)),
+            Phake::verify($emitter)->emit('url.host.all', array(
+                $url,
+                $event,
+                $queue,
+            ))
+        );
+    }
 }
