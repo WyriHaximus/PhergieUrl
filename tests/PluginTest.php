@@ -265,7 +265,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         return array(
             array(''),
             array('http://'),
-            array('//'),
         );
     }
 
