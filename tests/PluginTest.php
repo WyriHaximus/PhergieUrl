@@ -246,14 +246,14 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         ));
         $this->assertInstanceOf('WyriHaximus\Phergie\Plugin\Http\Request', $request);
 
-        $request->callResponse([
+        $request->callResponse(array(
             'foo' => 'bar',
-        ], 200);
+        ), 200);
 
         Phake::when($plugin)->emitShortningEvents($this->isType('string'), $this->isType('string'), $event, $queue)->thenReturn(Phake::mock('React\Promise\PromiseInterface'));
-        $request->callResolve('', [
+        $request->callResolve('', array(
             'foo' => 'bar',
-        ], 200);
+        ), 200);
 
         Phake::inOrder(
             Phake::verify($plugin, Phake::times(2))->logDebug($this->isType('string')),
