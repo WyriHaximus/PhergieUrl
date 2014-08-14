@@ -18,8 +18,24 @@ namespace WyriHaximus\Phergie\Plugin\Url;
 interface UrlInterface
 {
     public function getHeaders();
+
+    /**
+     * @return integer
+     */
     public function getCode();
+
+    /**
+     * @return string
+     */
     public function getBody();
+
+    /**
+     * @return string
+     */
     public function getUrl();
+
+    /**
+     * @return double
+     */
     public function getTiming();
 }
