@@ -12,5 +12,8 @@ namespace WyriHaximus\Phergie\Plugin\Url;
 
 interface UrlHandlerInterface
 {
+    /**
+     * @return string
+     */
     public function handle(UrlInterface $url);
 }
