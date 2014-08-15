@@ -24,7 +24,7 @@ class Html implements MimeInterface {
 
     public function extract(array $replacements, UrlInterface $url) {
         if (preg_match('#<title[^>]*>(.*?)</title>#is', $url->getBody(), $match)) {
-            $replacements['%composed-title%'] = $replacements['%title%'] = html_entity_decode(preg_replace('/[\s\v]+/', ' ', trim($match[1])));
+            $replacements['%composed-title%'] = $replacements['%title%'] = preg_replace('/[\s\v]+/', ' ', trim(html_entity_decode($match[1])));
         }
 
         return $replacements;
