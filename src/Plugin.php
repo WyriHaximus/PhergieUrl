@@ -159,7 +159,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
             'resolveCallback' => function($data, $headers, $code) use($requestId, $that, $url, $event, $queue, $start) {
                 $end = microtime(true);
                 $that->logDebug('[' . $requestId . ']Download complete (after ' . ($end - $start) . 's): ' . strlen($data) . ' in length length');
-                $that->emitShortningEvents($requestId, $url, $event, $queue)->then(function($shortUrl) use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue){
+                $that->emitShortningEvents($requestId, $url)->then(function($shortUrl) use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue){
                     $that->sendMessage(new Url($url, $data, $headers, $code, $end - $start, $shortUrl), $event, $queue);
                 }, function() use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue){
                     $that->sendMessage(new Url($url, $data, $headers, $code, $end - $start), $event, $queue);
