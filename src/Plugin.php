@@ -88,6 +88,9 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         return $this->handler;
     }
 
+    /**
+     * @param string $message
+     */
     public function logDebug($message) {
         $this->logger->debug('[Url]' . $message);
     }
