@@ -12,16 +12,18 @@ namespace WyriHaximus\Phergie\Plugin\Url\Mime;
 
 use WyriHaximus\Phergie\Plugin\Url\UrlInterface;
 
-class Image implements MimeInterface {
-
+class Image implements MimeInterface
+{
     const MIME = 'image/';
     const LMIME = 6;
 
-    public function matches($mimeType) {
+    public function matches($mimeType)
+    {
         return (substr($mimeType, 0, static::LMIME) == static::MIME);
     }
 
-    public function extract(array $replacements, UrlInterface $url) {
+    public function extract(array $replacements, UrlInterface $url)
+    {
         $size = @\getimagesize('data://application/octet-stream;base64,'  . base64_encode($url->getBody()));
         if ($size) {
             $replacements['%image-width%'] = $size[0];
