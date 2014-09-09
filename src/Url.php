@@ -31,7 +31,8 @@ class Url implements UrlInterface
      * @param int $code
      * @param float $timing
      */
-    public function __construct($url, $body, array $headers, $code, $timing, $shortUrl = null) {
+    public function __construct($url, $body, array $headers, $code, $timing, $shortUrl = null)
+    {
         $this->url = $url;
         $this->body = $body;
         $this->code = $code;
@@ -57,41 +58,47 @@ class Url implements UrlInterface
     /**
      * @return string
      */
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->url;
     }
 
     /**
      * @return string
      */
-    public function getBody() {
+    public function getBody()
+    {
         return $this->body;
     }
 
     /**
      * @return array
      */
-    public function getHeaders() {
+    public function getHeaders()
+    {
         return $this->headers;
     }
 
     /**
      * @return int
      */
-    public function getCode() {
+    public function getCode()
+    {
         return $this->code;
     }
 
     /**
      * @return float
      */
-    public function getTiming() {
+    public function getTiming()
+    {
         return $this->timing;
     }
     /**
      * @return string
      */
-    public function getShortUrl() {
+    public function getShortUrl()
+    {
         return $this->shortUrl;
     }
 
@@ -101,7 +108,8 @@ class Url implements UrlInterface
      *
      * @return string
      */
-    public static function extractHost($url) {
+    public static function extractHost($url)
+    {
         $parsedUrl = parse_url($url);
 
         if (count($parsedUrl) == 1 && isset($parsedUrl['path'])) {
