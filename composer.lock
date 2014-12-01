@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "97fd8cbf0bc011129db37da933d3f322",
+    "hash": "6428e5a78c19c19a206f4f869db03d5b",
     "packages": [
         {
             "name": "evenement/evenement",
@@ -1622,12 +1622,60 @@
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
             "time": "2014-08-05 09:07:51"
+        },
+        {
+            "name": "vectorface/dunit",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Vectorface/dunit.git",
+                "reference": "52b2654b0eca7830f42fd854fa22bc3cc4f92900"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Vectorface/dunit/zipball/52b2654b0eca7830f42fd854fa22bc3cc4f92900",
+                "reference": "52b2654b0eca7830f42fd854fa22bc3cc4f92900",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "bin": [
+                "dunit"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Bruce",
+                    "email": "dbruce@vectorface.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Cory Darby",
+                    "email": "ckdarby@vectorface.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Test code against multiple versions of PHP with the help of docker",
+            "homepage": "https://github.com/Vectorface/dunit",
+            "keywords": [
+                "docker",
+                "php",
+                "phpunit",
+                "testing"
+            ],
+            "time": "2014-11-05 19:29:53"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "phergie/phergie-irc-bot-react": 20
+        "phergie/phergie-irc-bot-react": 20,
+        "vectorface/dunit": 20
     },
     "prefer-stable": false,
     "platform": [],
