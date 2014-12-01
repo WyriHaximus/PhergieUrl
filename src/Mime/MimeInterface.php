@@ -17,8 +17,8 @@ use WyriHaximus\Phergie\Plugin\Url\UrlInterface;
  *
  * @package WyriHaximus\Phergie\Plugin\Url\Mime
  */
-interface MimeInterface {
-
+interface MimeInterface
+{
     /**
      * @return bool if MIME type matches
      */

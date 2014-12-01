@@ -57,11 +57,13 @@ class DefaultUrlHandler implements UrlHandlerInterface
         }
     }
 
-    public function getPattern() {
+    public function getPattern()
+    {
         return $this->pattern;
     }
 
-    public function handle(UrlInterface $url) {
+    public function handle(UrlInterface $url)
+    {
         $replacements = $this->getDefaultReplacements($url);
         $replacements = $this->extract($replacements, $url);
 
@@ -74,7 +76,8 @@ class DefaultUrlHandler implements UrlHandlerInterface
         return $formatted;
     }
 
-    public function getDefaultReplacements(UrlInterface $url) {
+    public function getDefaultReplacements(UrlInterface $url)
+    {
         $headers = $url->getHeaders();
 
         $replacements = array(
@@ -108,7 +111,8 @@ class DefaultUrlHandler implements UrlHandlerInterface
         return $replacements;
     }
 
-    public function extract($replacements, UrlInterface $url) {
+    public function extract($replacements, UrlInterface $url)
+    {
         $headers = $url->getHeaders();
 
         if ($url->getCode() == static::HTTP_STATUS_OK) {
