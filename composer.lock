@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "053077a5781de20e57f220206004b8a7",
+    "hash": "e23a7ff6e084a9b956b53816d02929e9",
     "packages": [
         {
             "name": "evenement/evenement",

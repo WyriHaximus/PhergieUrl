@@ -1,6 +1,6 @@
 # the versions of PHP to run against
 # possible versions: 5.2 5.3 5.4 5.5 5.6
-DUNIT_PHPVERSION="5.3 5.4 5.5 5.6"
+DUNIT_PHPVERSION="5.4 5.5 5.6"
 
 # the docker image to launch the container with
 # note that the version will be appended to the end of the image
