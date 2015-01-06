@@ -33,5 +33,4 @@ interface MimeInterface
      * @return array
      */
     public function extract(array $replacements, UrlInterface $url);
-
 }

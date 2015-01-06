@@ -26,6 +26,8 @@ use WyriHaximus\Phergie\Plugin\Http\Request;
  */
 class Plugin extends AbstractPlugin implements LoopAwareInterface
 {
+    const URL_HANDLER_INTERFACE = 'WyriHaximus\Phergie\Plugin\Url\UrlHandlerInterface';
+
     /**
      * @var UrlHandlerInterface
      */
@@ -52,7 +54,10 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      */
     public function __construct(array $config = array())
     {
-        if (isset($config['handler']) && in_array('WyriHaximus\Phergie\Plugin\Url\UrlHandlerInterface', class_implements($config['handler']))) {
+        if (
+            isset($config['handler']) &&
+            in_array(static::URL_HANDLER_INTERFACE, class_implements($config['handler']))
+        ) {
             $this->handler = $config['handler'];
         } else {
             $this->handler = new DefaultUrlHandler();
@@ -164,15 +169,31 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
                 $end = microtime(true);
                 $that->logDebug('[' . $requestId . ']Reponse (after ' . ($end - $start) . 's): ' . $code);
             },
-            'resolveCallback' => function ($data, $headers, $code) use ($requestId, $that, $url, $event, $queue, $start) {
-                $end = microtime(true);
-                $that->logDebug('[' . $requestId . ']Download complete (after ' . ($end - $start) . 's): ' . strlen($data) . ' in length length');
-                $that->emitShortningEvents($requestId, $url)->then(function ($shortUrl) use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue) {
-                    $that->sendMessage(new Url($url, $data, $headers, $code, $end - $start, $shortUrl), $event, $queue);
-                }, function () use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue) {
-                    $that->sendMessage(new Url($url, $data, $headers, $code, $end - $start), $event, $queue);
-                });
-            },
+            'resolveCallback' =>
+                function ($data, $headers, $code) use ($requestId, $that, $url, $event, $queue, $start) {
+                    $end = microtime(true);
+                    $message = '[';
+                    $message .= $requestId;
+                    $message .= ']Download complete (after ';
+                    $message .= ($end - $start);
+                    $message .= 's): ';
+                    $message .= strlen($data);
+                    $message .= ' in length length';
+                    $that->logDebug($message);
+                    $that->emitShortningEvents($requestId, $url)->then(
+                        function ($shortUrl) use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue) {
+                            $that->sendMessage(
+                                new Url($url, $data, $headers, $code, $end - $start, $shortUrl),
+                                $event,
+                                $queue
+                            );
+                        },
+                        function () use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue) {
+                            $that->sendMessage(new Url($url, $data, $headers, $code, $end - $start), $event, $queue);
+                        }
+                    );
+                }
+            ,
         ));
     }
 

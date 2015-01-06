@@ -38,5 +38,4 @@ class Image implements MimeInterface
 
         return $replacements;
     }
-
 }
