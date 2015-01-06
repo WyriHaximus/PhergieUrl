@@ -25,11 +25,12 @@ class Url implements UrlInterface
     protected $shortUrl;
 
     /**
-     * @param string $url
-     * @param string $body
+     * @param $url
+     * @param $body
      * @param array $headers
-     * @param int $code
-     * @param float $timing
+     * @param $code
+     * @param $timing
+     * @param null $shortUrl
      */
     public function __construct($url, $body, array $headers, $code, $timing, $shortUrl = null)
     {
