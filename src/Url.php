@@ -30,7 +30,7 @@ class Url implements UrlInterface
      * @param array $headers
      * @param $code
      * @param $timing
-     * @param null $shortUrl
+     * @param string|null $shortUrl
      */
     public function __construct($url, $body, array $headers, $code, $timing, $shortUrl = null)
     {
