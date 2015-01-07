@@ -35,7 +35,7 @@ interface UrlInterface
     public function getUrl();
 
     /**
-     * @return double
+     * @return long
      */
     public function getTiming();
 }

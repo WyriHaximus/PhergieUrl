@@ -13,6 +13,10 @@ namespace WyriHaximus\Phergie\Plugin\Url;
 interface UrlHandlerInterface
 {
     /**
+     * Handle an $url and generate a message for it.
+     *
+     * @param UrlInterface $url URL to work with and generate a message for.
+     *
      * @return string
      */
     public function handle(UrlInterface $url);

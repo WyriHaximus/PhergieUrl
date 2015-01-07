@@ -17,11 +17,34 @@ namespace WyriHaximus\Phergie\Plugin\Url;
  */
 class Url implements UrlInterface
 {
+    /**
+     * @var string
+     */
     protected $url;
+
+    /**
+     * @var string
+     */
     protected $body;
+
+    /**
+     * @var array
+     */
     protected $headers = array();
+
+    /**
+     * @var integer
+     */
     protected $code;
+
+    /**
+     * @var long
+     */
     protected $timing;
+
+    /**
+     * @var null|string
+     */
     protected $shortUrl;
 
     /**
@@ -95,6 +118,7 @@ class Url implements UrlInterface
     {
         return $this->timing;
     }
+
     /**
      * @return string
      */
@@ -102,7 +126,6 @@ class Url implements UrlInterface
     {
         return $this->shortUrl;
     }
-
 
     /**
      * @param string $url

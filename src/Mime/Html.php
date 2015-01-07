@@ -14,6 +14,14 @@ use WyriHaximus\Phergie\Plugin\Url\UrlInterface;
 
 class Html implements MimeInterface
 {
+
+    /**
+     * Return whether this mimetype is supported by this handler.
+     *
+     * @param string $mimeType The mimetype to check.
+     *
+     * @return boolean
+     */
     public function matches($mimeType)
     {
         return in_array($mimeType, array(
@@ -23,6 +31,14 @@ class Html implements MimeInterface
         ));
     }
 
+    /**
+     * Extract all possible useful information from the given url.
+     *
+     * @param array        $replacements Message replacements.
+     * @param UrlInterface $url          URL to extract data from.
+     *
+     * @return array
+     */
     public function extract(array $replacements, UrlInterface $url)
     {
         if (preg_match('#<title[^>]*>(.*?)</title>#is', $url->getBody(), $match)) {

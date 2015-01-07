@@ -20,15 +20,19 @@ use WyriHaximus\Phergie\Plugin\Url\UrlInterface;
 interface MimeInterface
 {
     /**
-     * @return bool if MIME type matches
+     * Return whether this mimetype is supported by this handler.
+     *
+     * @param string $mimeType The mimetype to check.
+     *
+     * @return boolean
      */
     public function matches($mimeType);
 
     /**
-     * Extract all possible usefull information from the given url
+     * Extract all possible useful information from the given url.
      *
-     * @param array $replacements
-     * @param UrlInterface $url
+     * @param array        $replacements Message replacements.
+     * @param UrlInterface $url          URL to extract data from.
      *
      * @return array
      */
