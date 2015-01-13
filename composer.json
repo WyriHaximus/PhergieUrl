@@ -9,6 +9,7 @@
         "source": "https://github.com/WyriHaximus/PhergieUrl"
     },
     "require": {
+        "php": ">=5.4.0",
         "phergie/phergie-irc-bot-react": "~1.0",
         "nojimage/twitter-text-php": "1.1.1",
         "wyrihaximus/phergie-http": "~1.0|~2.0",
