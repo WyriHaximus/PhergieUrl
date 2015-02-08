@@ -36,6 +36,10 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      * @var UrlHandlerInterface
      */
     protected $shortingTimeout = 15;
+    /**
+     * @var bool
+     */
+    protected $hostUrlEmitsOnly = false;
 
     /**
      * @var LoopInterface
@@ -64,6 +68,9 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         }
         if (isset($config['shortingTimeout'])) {
             $this->shortingTimeout = $config['shortingTimeout'];
+        }
+        if (isset($config['hostUrlEmitsOnly'])) {
+            $this->hostUrlEmitsOnly = boolval($config['hostUrlEmitsOnly']);
         }
     }
 
@@ -140,7 +147,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
             $this->logDebug('[' . $requestId . ']Corrected url: ' . $url);
         }
 
-        if ($this->emitUrlEvents($requestId, $url, $event, $queue)) {
+        if ($this->emitUrlEvents($requestId, $url, $event, $queue) && !$this->hostUrlEmitsOnly) {
             $this->logDebug('[' . $requestId . ']Emitting: http.request');
             $this->emitter->emit('http.request', array($this->createRequest($requestId, $url, $event, $queue)));
         }
