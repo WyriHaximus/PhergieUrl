@@ -29,6 +29,10 @@ return array(
         // configuration
         new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
             // All configuration is optional
+            
+            'hostUrlEmitsOnly' = false // url.host.(all|<host>) emits only, no further URL handling / shortening
+            
+            // or
 
             'handler' => new \WyriHaximus\Phergie\Plugin\Url\DefaultUrlHandler(), // URL handler that creates a formatted message based on the URL
 
