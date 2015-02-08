@@ -30,7 +30,7 @@ return array(
         new \WyriHaximus\Phergie\Plugin\Url\Plugin(array(
             // All configuration is optional
             
-            'hostUrlEmitsOnly' = false // url.host.(all|<host>) emits only, no further URL handling / shortening
+            'hostUrlEmitsOnly' => false // url.host.(all|<host>) emits only, no further URL handling / shortening
             
             // or
 
