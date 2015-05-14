@@ -187,7 +187,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
                     $message .= strlen($data);
                     $message .= ' in length length';
                     $that->logDebug($message);
-                    $that->emitShortningEvents($requestId, $url)->then(
+                    $that->emitshorteningEvents($requestId, $url)->then(
                         function ($shortUrl) use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue) {
                             $that->sendMessage(
                                 new Url($url, $data, $headers, $code, $end - $start, $shortUrl),
@@ -232,7 +232,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return \React\Promise\DeferredPromise
      */
-    public function emitShortningEvents($requestId, $url)
+    public function emitshorteningEvents($requestId, $url)
     {
         $host = Url::extractHost($url);
         list($privateDeferred, $userFacingPromise) = $this->preparePromises();

@@ -154,7 +154,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testEmitShortningEventsProvider() {
+    public function testEmitshorteningEventsProvider() {
         return array(
             array(
                 'url.shorten.google.com',
@@ -168,9 +168,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testEmitShortningEventsProvider
+     * @dataProvider testEmitshorteningEventsProvider
      */
-    public function testEmitShortningEvents($eventName, $url) {
+    public function testEmitshorteningEvents($eventName, $url) {
         $logger = Phake::mock('Monolog\Logger');
         $privateDeferred = Phake::mock('React\Promise\Deferred');
 
@@ -188,7 +188,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin->setEventEmitter($emitter);
         $plugin->setLogger($logger);
 
-        $this->assertInstanceOf('React\Promise\PromiseInterface', self::getMethod('emitShortningEvents')->invokeArgs($plugin, array(
+        $this->assertInstanceOf('React\Promise\PromiseInterface', self::getMethod('emitshorteningEvents')->invokeArgs($plugin, array(
             'foo:bar',
             $url,
         )));
@@ -199,7 +199,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testEmitShortningNone() {
+    public function testEmitshorteningNone() {
         $loop = Phake::mock('React\EventLoop\LoopInterface');
         $url = 'http://google.com/';
         $logger = Phake::mock('Monolog\Logger');
@@ -221,7 +221,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin->setLogger($logger);
         $plugin->setLoop($loop);
 
-        $this->assertInstanceOf('React\Promise\PromiseInterface', self::getMethod('emitShortningEvents')->invokeArgs($plugin, array(
+        $this->assertInstanceOf('React\Promise\PromiseInterface', self::getMethod('emitshorteningEvents')->invokeArgs($plugin, array(
             'foo:bar',
             $url,
         )));
@@ -250,7 +250,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             'foo' => 'bar',
         ), 200);
 
-        Phake::when($plugin)->emitShortningEvents($this->isType('string'), $this->isType('string'))->thenReturn(Phake::mock('React\Promise\PromiseInterface'));
+        Phake::when($plugin)->emitshorteningEvents($this->isType('string'), $this->isType('string'))->thenReturn(Phake::mock('React\Promise\PromiseInterface'));
 
         $request->callResolve('', array(
             'foo' => 'bar',
@@ -258,7 +258,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
         Phake::inOrder(
             Phake::verify($plugin, Phake::times(2))->logDebug($this->isType('string')),
-            Phake::verify($plugin)->emitShortningEvents($this->isType('string'), $this->isType('string'))
+            Phake::verify($plugin)->emitshorteningEvents($this->isType('string'), $this->isType('string'))
         );
     }
 
