@@ -250,7 +250,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             'foo' => 'bar',
         ), 200);
 
-        Phake::when($plugin)->emitshorteningEvents($this->isType('string'), $this->isType('string'))->thenReturn(Phake::mock('React\Promise\PromiseInterface'));
+        Phake::when($plugin)->emitShorteningEvents($this->isType('string'), $this->isType('string'))->thenReturn(Phake::mock('React\Promise\PromiseInterface'));
 
         $request->callResolve('', array(
             'foo' => 'bar',
@@ -258,7 +258,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
         Phake::inOrder(
             Phake::verify($plugin, Phake::times(2))->logDebug($this->isType('string')),
-            Phake::verify($plugin)->emitshorteningEvents($this->isType('string'), $this->isType('string'))
+            Phake::verify($plugin)->emitShorteningEvents($this->isType('string'), $this->isType('string'))
         );
     }
 
