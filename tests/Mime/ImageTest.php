@@ -55,6 +55,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase {
                     '%image-width%' => 1,
                     '%image-height%' => 1,
                     '%image-channels%' => 3,
+                    '%composed-title%' => 'image/gif',
                     '%image-mime%' => 'image/gif',
                 ),
                 new Url('', base64_decode('R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='), array(), 200, 1),
