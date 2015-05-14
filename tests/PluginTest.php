@@ -157,11 +157,11 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     public function testEmitShortningEventsProvider() {
         return array(
             array(
-                'url.shorting.google.com',
+                'url.shorten.google.com',
                 'http://google.com/',
             ),
             array(
-                'url.shorting.all',
+                'url.shorten.all',
                 'http://google.com/',
             ),
         );
@@ -205,7 +205,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $logger = Phake::mock('Monolog\Logger');
         $privateDeferred = Phake::mock('React\Promise\Deferred');
 
-        Phake::when($loop)->listeners('url.shorting.google.com')->thenReturn(array());
+        Phake::when($loop)->listeners('url.shorten.google.com')->thenReturn(array());
 
         $emitter = Phake::mock('Evenement\EventEmitterInterface');
         $plugin = Phake::mock('WyriHaximus\Phergie\Plugin\Url\Plugin');

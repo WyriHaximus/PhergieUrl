@@ -38,7 +38,7 @@ return array(
 
             // or
 
-            'shortingTimeout' => 15 // If after this amount of seconds no url shortner has come up with a short URL the normal URL will be used. (Not in effect when there are no shortners listening.)
+            'shortenTimeout' => 15 // If after this amount of seconds no url shortner has come up with a short URL the normal URL will be used. (Not in effect when there are no shortners listening.)
 
         )),
 
@@ -55,8 +55,8 @@ This plugin emits the following generic, do what ever you want with it, events.
 
 This plugins also emits two events for url shortning. Only called when there are listeners registered. Each event emit is passed a `UrlShortningEvent`, if a shortner resolved short url it calls the `resolve` method on the promise.
 
-* `url.shorting.HOSTNAME` For example `url.shorting.twitter.com` (`www.` is stripped from the hostname).
-* `url.shorting.all` For all hostnames.
+* `url.shorten.HOSTNAME` For example `url.shorten.twitter.com` (`www.` is stripped from the hostname).
+* `url.shorten.all` For all hostnames.
 
 ## Tests
 

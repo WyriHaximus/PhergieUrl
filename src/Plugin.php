@@ -35,7 +35,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @var UrlHandlerInterface
      */
-    protected $shortingTimeout = 15;
+    protected $shortenTimeout = 15;
     /**
      * @var bool
      */
@@ -52,7 +52,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      * Supported keys:
      *
      * handler - handler to create a message for the given URL
-     * shortingTimeout - timeout in seconds how long it can take to short an URL
+     * shortenTimeout - timeout in seconds how long it can take to short an URL
      *
      * @param array $config
      */
@@ -66,8 +66,8 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         } else {
             $this->handler = new DefaultUrlHandler();
         }
-        if (isset($config['shortingTimeout'])) {
-            $this->shortingTimeout = $config['shortingTimeout'];
+        if (isset($config['shortenTimeout'])) {
+            $this->shortenTimeout = $config['shortenTimeout'];
         }
         if (isset($config['hostUrlEmitsOnly'])) {
             $this->hostUrlEmitsOnly = boolval($config['hostUrlEmitsOnly']);
@@ -237,7 +237,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         $host = Url::extractHost($url);
         list($privateDeferred, $userFacingPromise) = $this->preparePromises();
 
-        $eventName = 'url.shorting.';
+        $eventName = 'url.shorten.';
         if (count($this->emitter->listeners($eventName . $host)) > 0) {
             $eventName .= $host;
             $this->logDebug('[' . $requestId . ']Emitting: ' . $eventName);
@@ -268,7 +268,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         }, function () use ($userFacingDeferred) {
             $userFacingDeferred->reject();
         });
-        $this->loop->addTimer($this->shortingTimeout, function () use ($privateDeferred) {
+        $this->loop->addTimer($this->shortenTimeout, function () use ($privateDeferred) {
             $privateDeferred->reject();
         });
 
