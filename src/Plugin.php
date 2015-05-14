@@ -187,7 +187,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
                     $message .= strlen($data);
                     $message .= ' in length length';
                     $that->logDebug($message);
-                    $that->emitshorteningEvents($requestId, $url)->then(
+                    $that->emitShorteningEvents($requestId, $url)->then(
                         function ($shortUrl) use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue) {
                             $that->sendMessage(
                                 new Url($url, $data, $headers, $code, $end - $start, $shortUrl),
