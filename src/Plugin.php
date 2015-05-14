@@ -56,7 +56,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @param array $config
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = [])
     {
         if (
             isset($config['handler']) &&
@@ -89,9 +89,9 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             'irc.received.privmsg' => 'handleIrcReceived',
-        );
+        ];
     }
 
     /**
@@ -149,11 +149,11 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
 
         if ($this->emitUrlEvents($requestId, $url, $event, $queue) && !$this->hostUrlEmitsOnly) {
             $this->logDebug('[' . $requestId . ']Emitting: http.request');
-            $this->emitter->emit('http.request', array($this->createRequest($requestId, $url, $event, $queue)));
+            $this->emitter->emit('http.request', [$this->createRequest($requestId, $url, $event, $queue)]);
         }
 
         $this->logDebug('[' . $requestId . ']Emitting: url.host.all');
-        $this->emitter->emit('url.host.all', array($url, $event, $queue));
+        $this->emitter->emit('url.host.all', [$url, $event, $queue]);
 
         return true;
     }
@@ -169,15 +169,14 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     public function createRequest($requestId, $url, UserEvent $event, EventQueue $queue)
     {
         $start = microtime(true);
-        $that = $this;
-        return new Request(array(
+        return new Request([
             'url' => $url,
-            'responseCallback' => function ($headers, $code) use ($requestId, $that, $start) {
+            'responseCallback' => function ($headers, $code) use ($requestId, $start) {
                 $end = microtime(true);
-                $that->logDebug('[' . $requestId . ']Reponse (after ' . ($end - $start) . 's): ' . $code);
+                $this->logDebug('[' . $requestId . ']Reponse (after ' . ($end - $start) . 's): ' . $code);
             },
             'resolveCallback' =>
-                function ($data, $headers, $code) use ($requestId, $that, $url, $event, $queue, $start) {
+                function ($data, $headers, $code) use ($requestId, $url, $event, $queue, $start) {
                     $end = microtime(true);
                     $message = '[';
                     $message .= $requestId;
@@ -186,22 +185,22 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
                     $message .= 's): ';
                     $message .= strlen($data);
                     $message .= ' in length length';
-                    $that->logDebug($message);
-                    $that->emitShorteningEvents($requestId, $url)->then(
-                        function ($shortUrl) use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue) {
-                            $that->sendMessage(
+                    $this->logDebug($message);
+                    $this->emitShorteningEvents($requestId, $url)->then(
+                        function ($shortUrl) use ($url, $data, $headers, $code, $end, $start, $event, $queue) {
+                            $this->sendMessage(
                                 new Url($url, $data, $headers, $code, $end - $start, $shortUrl),
                                 $event,
                                 $queue
                             );
                         },
-                        function () use ($that, $url, $data, $headers, $code, $end, $start, $event, $queue) {
-                            $that->sendMessage(new Url($url, $data, $headers, $code, $end - $start), $event, $queue);
+                        function () use ($url, $data, $headers, $code, $end, $start, $event, $queue) {
+                            $this->sendMessage(new Url($url, $data, $headers, $code, $end - $start), $event, $queue);
                         }
                     );
                 }
             ,
-        ));
+        ]);
     }
 
     /**
@@ -212,14 +211,14 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return bool
      */
-    public function emitUrlEvents($requestId, $url, UserEvent $event, EventQueue $queue)
+    protected function emitUrlEvents($requestId, $url, UserEvent $event, EventQueue $queue)
     {
         $host = Url::extractHost($url);
 
         $eventName = 'url.host.' . $host;
         if (count($this->emitter->listeners($eventName)) > 0) {
             $this->logDebug('[' . $requestId . ']Emitting: ' . $eventName);
-            $this->emitter->emit($eventName, array($url, $event, $queue));
+            $this->emitter->emit($eventName, [$url, $event, $queue]);
             return false;
         } else {
             return true;
@@ -232,7 +231,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return \React\Promise\DeferredPromise
      */
-    public function emitShorteningEvents($requestId, $url)
+    protected function emitShorteningEvents($requestId, $url)
     {
         $host = Url::extractHost($url);
         list($privateDeferred, $userFacingPromise) = $this->preparePromises();
@@ -241,11 +240,11 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
         if (count($this->emitter->listeners($eventName . $host)) > 0) {
             $eventName .= $host;
             $this->logDebug('[' . $requestId . ']Emitting: ' . $eventName);
-            $this->emitter->emit($eventName, array($url, $privateDeferred));
+            $this->emitter->emit($eventName, [$url, $privateDeferred]);
         } elseif (count($this->emitter->listeners($eventName . 'all')) > 0) {
             $eventName .= 'all';
             $this->logDebug('[' . $requestId . ']Emitting: ' . $eventName);
-            $this->emitter->emit($eventName, array($url, $privateDeferred));
+            $this->emitter->emit($eventName, [$url, $privateDeferred]);
         } else {
             $this->loop->addTimer(0.1, function () use ($privateDeferred) {
                 $privateDeferred->reject();
@@ -258,7 +257,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     /**
      * @return array
      */
-    public function preparePromises()
+    protected function preparePromises()
     {
         $userFacingDeferred = new Deferred();
         $privateDeferred = new Deferred();
@@ -272,10 +271,10 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
             $privateDeferred->reject();
         });
 
-        return array(
+        return [
             $privateDeferred,
             $userFacingPromise,
-        );
+        ];
     }
 
     /**
@@ -283,7 +282,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      * @param UserEvent $event
      * @param EventQueue $queue
      */
-    public function sendMessage(Url $url, UserEvent $event, EventQueue $queue)
+    protected function sendMessage(Url $url, UserEvent $event, EventQueue $queue)
     {
         $message = $this->getHandler()->handle($url);
         foreach ($event->getTargets() as $target) {
