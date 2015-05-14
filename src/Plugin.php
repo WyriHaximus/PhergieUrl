@@ -232,7 +232,7 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
      *
      * @return \React\Promise\DeferredPromise
      */
-    public function emitshorteningEvents($requestId, $url)
+    public function emitShorteningEvents($requestId, $url)
     {
         $host = Url::extractHost($url);
         list($privateDeferred, $userFacingPromise) = $this->preparePromises();

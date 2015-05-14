@@ -154,7 +154,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testEmitshorteningEventsProvider() {
+    public function testEmitShorteningEventsProvider() {
         return array(
             array(
                 'url.shorten.google.com',
@@ -168,9 +168,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testEmitshorteningEventsProvider
+     * @dataProvider testEmitShorteningEventsProvider
      */
-    public function testEmitshorteningEvents($eventName, $url) {
+    public function testEmitShorteningEvents($eventName, $url) {
         $logger = Phake::mock('Monolog\Logger');
         $privateDeferred = Phake::mock('React\Promise\Deferred');
 
@@ -199,7 +199,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testEmitshorteningNone() {
+    public function testEmitShorteningNone() {
         $loop = Phake::mock('React\EventLoop\LoopInterface');
         $url = 'http://google.com/';
         $logger = Phake::mock('Monolog\Logger');
