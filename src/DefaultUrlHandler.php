@@ -51,6 +51,7 @@ class DefaultUrlHandler implements UrlHandlerInterface
         if ($mimes === null) {
             $this->mimes = array(
                 new Mime\Html(),
+                new Mime\Image(),
             );
         } else {
             $this->mimes = $mimes;
