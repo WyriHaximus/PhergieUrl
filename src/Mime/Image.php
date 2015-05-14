@@ -63,7 +63,7 @@ class Image implements MimeInterface
             $replacements['%image-channels%'] = $size['channels'];
         }
         if (isset($size['mime'])) {
-            $replacements['%image-mime%'] = $size['mime'];
+            $replacements['%image-mime%'] = $replacements['%composed-title%'] = $size['mime'];
         }
 
         return $replacements;
