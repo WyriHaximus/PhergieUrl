@@ -1,35 +1,35 @@
 {
-    "name": "wyrihaximus/phergie-url",
-    "description": "Phergie plugin for Display URL information about links",
-    "keywords": [ "irc", "bot", "react", "plugin" ],
-    "license": "MIT",
-    "support": {
-        "irc": "irc://irc.freenode.net/phergie",
-        "issues": "https://github.com/WyriHaximus/PhergieUrl/issues",
-        "source": "https://github.com/WyriHaximus/PhergieUrl"
-    },
-    "require": {
-        "php": ">=5.4.0",
-        "ext-gd": "^0.0.0",
-        "phergie/phergie-irc-bot-react": "~1.0",
-        "nojimage/twitter-text-php": "1.1.1",
-        "wyrihaximus/phergie-http": "~1.0|~2.0",
-        "react/promise": "~1.0|~2.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~4.0",
-        "phake/phake": "~1.0",
-        "vectorface/dunit": "~2.0",
-        "squizlabs/php_codesniffer": "~1.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "WyriHaximus\\Phergie\\Plugin\\Url\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "WyriHaximus\\Phergie\\Tests\\Plugin\\Url\\": "tests"
-        }
+  "name": "wyrihaximus/phergie-url",
+  "description": "Phergie plugin for Display URL information about links",
+  "keywords": [ "irc", "bot", "react", "plugin" ],
+  "license": "MIT",
+  "support": {
+    "irc": "irc://irc.freenode.net/phergie",
+    "issues": "https://github.com/WyriHaximus/PhergieUrl/issues",
+    "source": "https://github.com/WyriHaximus/PhergieUrl"
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "ext-gd": "^0.0.0",
+    "phergie/phergie-irc-bot-react": "~1.0",
+    "nojimage/twitter-text-php": "1.1.1",
+    "wyrihaximus/phergie-http": "~1.0|~2.0",
+    "react/promise": "~1.0|~2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "phake/phake": "~1.0",
+    "vectorface/dunit": "~2.0",
+    "squizlabs/php_codesniffer": "~1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "WyriHaximus\\Phergie\\Plugin\\Url\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WyriHaximus\\Phergie\\Tests\\Plugin\\Url\\": "tests"
+    }
+  }
 }
