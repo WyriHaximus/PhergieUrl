@@ -87,6 +87,8 @@ class DefaultUrlHandler implements UrlHandlerInterface
             '%http-status-code%' => $url->getCode(),
             '%timing%' => $url->getTiming(),
             '%timing2%' => round($url->getTiming(), 2),
+            '%response-time%' => $url->getTiming(),
+            '%response-time2%' => round($url->getTiming(), 2),
             '%title%' => '',
             '%composed-title%' => '',
         );
