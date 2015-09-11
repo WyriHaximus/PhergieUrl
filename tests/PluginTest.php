@@ -117,7 +117,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         Phake::when($plugin)->getHandler()->thenReturn($handler);
 
         $event = Phake::mock('Phergie\Irc\Event\UserEvent');
-        Phake::when($event)->getTargets()->thenReturn(array($target));
+        Phake::when($event)->getSource()->thenReturn($target);
 
         $queue = Phake::mock('Phergie\Irc\Bot\React\EventQueue');
 
