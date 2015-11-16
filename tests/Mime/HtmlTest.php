@@ -54,6 +54,13 @@ class HtmlTest extends \PHPUnit_Framework_TestCase {
                 new Url('', '<html><title>foo</title></html></html>', array(), 200, 1),
             ),
             array(
+                array(
+                    '%title%' => 'foo\'s wörk',
+                    '%composed-title%' => 'foo\'s wörk',
+                ),
+                new Url('', '<html><title>foo&#39;s w&ouml;rk</title></html></html>', array(), 200, 1),
+            ),
+            array(
                 array(),
                 new Url('', '', array(), 200, 1),
             ),

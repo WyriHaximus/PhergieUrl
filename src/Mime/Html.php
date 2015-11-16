@@ -44,7 +44,7 @@ class Html implements MimeInterface
         if (preg_match('#<title[^>]*>(.*?)</title>#is', $url->getBody(), $match)) {
             $replacements['%composed-title%'] =
             $replacements['%title%'] =
-            preg_replace('/[\s\v]+/', ' ', trim(html_entity_decode($match[1])));
+            preg_replace('/[\s\v]+/', ' ', trim(html_entity_decode($match[1], ENT_QUOTES | ENT_HTML5)));
         }
 
         return $replacements;
