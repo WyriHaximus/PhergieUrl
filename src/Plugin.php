@@ -286,8 +286,6 @@ class Plugin extends AbstractPlugin implements LoopAwareInterface
     public function sendMessage(Url $url, UserEvent $event, EventQueue $queue)
     {
         $message = $this->getHandler()->handle($url);
-        foreach ($event->getTargets() as $target) {
-            $queue->ircPrivmsg($target, $message);
-        }
+        $queue->ircPrivmsg($event->getSource(), $message);
     }
 }
